@@ -81,7 +81,6 @@ const firebaseConfig = {
       if (user) {
         displayUserInfo(user);
         displayEvents();
-        checkNotifications();
       } else {
         document.getElementById('loginButton').style.display = 'block';
         document.getElementById('userInfo').style.display = 'none';
@@ -171,53 +170,11 @@ const firebaseConfig = {
         eventForm.reset();
         eventForm.style.display = 'none';
         displayEvents();
-        addNotification(title);
       }).catch((error) => {
         console.error("Error posting event:", error);
       });
     }
-  
-    function addNotification(eventTitle) {
-      const notificationsCollection = firestore.collection('notifications');
-      notificationsCollection.add({
-        message: `${firebase.auth().currentUser.displayName} posted "${eventTitle}"`,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    }
-  
-    function checkNotifications() {
-      const notificationsRef = firestore.collection('notifications');
-      notificationsRef.orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
-        const notificationCount = snapshot.size;
-        const notificationBadge = document.getElementById('notificationBadge');
-        if (notificationCount > 0) {
-          notificationBadge.textContent = notificationCount;
-          notificationBadge.style.display = 'block';
-        } else {
-          notificationBadge.style.display = 'none';
-        }
-      });
-    }
-  
-    function displayNotifications() {
-      const notificationsContainer = document.getElementById('notificationsContainer');
-      const notificationsRef = firestore.collection('notifications');
-      notificationsRef.orderBy('timestamp', 'desc').get().then((snapshot) => {
-        notificationsContainer.innerHTML = '';
-        snapshot.forEach((doc) => {
-          const notification = doc.data();
-          const notificationElement = document.createElement('div');
-          notificationElement.classList.add('notification');
-          notificationElement.textContent = `${notification.message} - ${notification.timestamp.toDate().toLocaleString()}`;
-          notificationsContainer.appendChild(notificationElement);
-        });
-      });
-    }
-  
-    document.getElementById('notifications').addEventListener('click', () => {
-      displayNotifications();
-    });
-  
+ 
     // Function to handle liking or unliking an event
     function likeEvent(eventId) {
       const userId = firebase.auth().currentUser.uid;
@@ -242,6 +199,35 @@ const firebaseConfig = {
       });
     }
   
+    function sendReport(eventId, commentText, reportReason) {
+        const reportsCollection = firestore.collection('reports');
+        reportsCollection.add({
+          eventId: eventId,
+          commentText: commentText,
+          reason: reportReason,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+          console.log("Report sent successfully!");
+        }).catch((error) => {
+          console.error("Error sending report:", error);
+        });
+      }
+      
+
+      function deleteComment(eventId, commentText) {
+        const eventRef = firestore.collection('events').doc(eventId);
+        eventRef.get().then((doc) => {
+          if (doc.exists) {
+            const comments = doc.data().comments;
+            const updatedComments = comments.filter(comment => comment.text !== commentText);
+            eventRef.update({ comments: updatedComments });
+          }
+        }).catch((error) => {
+          console.error("Error deleting comment:", error);
+        });
+      }
+      
+
     // Function to retrieve and display events
     function displayEvents() {
       const eventsContainer = document.getElementById('eventsContainer');
@@ -304,31 +290,111 @@ const firebaseConfig = {
   
           const commentsContainer = document.createElement('div');
           commentsContainer.classList.add('comments-container');
-  
           if (event.comments && event.comments.length > 0) {
             event.comments.forEach(comment => {
               const commentElement = document.createElement('div');
               commentElement.classList.add('comment');
-  
+            
               const commentText = document.createElement('span');
               commentText.classList.add('comment-text');
-              commentText.textContent = comment;
-  
-              const editButton = document.createElement('button');
-              editButton.classList.add('edit-comment');
-              editButton.textContent = 'Edit';
-              editButton.addEventListener('click', () => {
-                const newComment = prompt('Edit your comment:', comment);
-                if (newComment) {
-                  editComment(eventId, comment, newComment);
+              commentText.textContent = comment.text;
+            
+              const authorInfo = document.createElement('div');
+              authorInfo.classList.add('author-info');
+          
+              const authorName = document.createElement('span');
+              authorName.classList.add('author-name');
+              authorName.textContent = comment.authorName;
+          
+              const authorImage = document.createElement('img');
+              authorImage.classList.add('author-image');
+              authorImage.src = comment.authorImage || 'default-user-image.png';
+              const tripleDotButton = document.createElement('button');
+              tripleDotButton.innerHTML = '⋮'; // Unicode character for triple dot symbol
+              
+              tripleDotButton.addEventListener('click', () => {
+                const dropdownMenu = commentElement.querySelector('.dropdown-menu');
+                
+                if (dropdownMenu.style.display === 'block') {
+                  dropdownMenu.style.display = 'none';
+                } else {
+                  dropdownMenu.style.display = 'block';
+                  // Position the dropdown menu above the triple dot button
+                  dropdownMenu.style.top = `${tripleDotButton.offsetTop - dropdownMenu.clientHeight}px`;
+                  dropdownMenu.style.left = `${tripleDotButton.offsetLeft}px`;
                 }
               });
-  
-              commentElement.appendChild(commentText);
-              commentElement.appendChild(editButton);
+              
+              
+              
+              const dropdownMenu = document.createElement('div');
+              dropdownMenu.classList.add('dropdown-menu');
+              dropdownMenu.style.display = 'none';
+              
+              const editButton = document.createElement('button');
+              editButton.textContent = 'Edit';
+              editButton.classList.add('edit-comment');
+              editButton.addEventListener('click', () => {
+                const newComment = prompt('Edit your comment:', comment.text);
+                if (newComment) {
+                  editComment(eventId, comment.text, newComment);
+                }
+              });
+              
+              const deleteButton = document.createElement('button');
+              deleteButton.textContent = 'Delete';
+              deleteButton.classList.add('delete-comment');
+              deleteButton.addEventListener('click', () => {
+                if (confirm("Are you sure you want to delete this comment?")) {
+                  deleteComment(eventId, comment.text);
+                }
+              });
+              
+                        
+            // Inside the loop where you create comment elements
+            const reportButton = document.createElement('button');
+            reportButton.textContent = 'Report';
+
+            // Add event listener for report button
+            reportButton.addEventListener('click', () => {
+            const reportForm = document.createElement('div');
+            reportForm.classList.add('report-form');
+            reportForm.innerHTML = `
+                <input type="text" id="reportReason" placeholder="Enter reason for report..." required />
+                <button id="sendReport">Send</button>
+            `;
+
+            // Add event listener for send button
+            const sendReportButton = reportForm.querySelector('#sendReport');
+            sendReportButton.addEventListener('click', () => {
+                const reportReason = reportForm.querySelector('#reportReason').value;
+                sendReport(eventId, comment.text, reportReason);
+                reportForm.remove();
+            });
+
+            // Append report form to document body
+            document.body.appendChild(reportForm);
+            });
+
+            // Append report button to comment element
+            commentElement.appendChild(reportButton);
+
+              
+              dropdownMenu.appendChild(editButton);
+              dropdownMenu.appendChild(deleteButton);
+              dropdownMenu.appendChild(reportButton);
+              
+
+              commentElement.appendChild(authorImage);
+              authorInfo.appendChild(authorName);
+              authorInfo.appendChild(commentText);
+              commentElement.appendChild(authorInfo);
               commentsContainer.appendChild(commentElement);
+              commentElement.appendChild(tripleDotButton);
+              commentElement.appendChild(dropdownMenu);
             });
           }
+          
   
           eventDetails.appendChild(eventTitle);
           eventDetails.appendChild(eventDescription);
@@ -351,10 +417,11 @@ const firebaseConfig = {
   
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Delete';
-            deleteButton.classList.add('delete-event');
+            deleteButton.classList.add('delete-comment');
             deleteButton.addEventListener('click', () => {
-              deleteEvent(eventId);
+              deleteComment(eventId, comment.text);
             });
+            
   
             eventDetails.appendChild(editButton);
             eventDetails.appendChild(deleteButton);
@@ -368,13 +435,19 @@ const firebaseConfig = {
     }
   
     function postComment(eventId, comment) {
-      const eventRef = firestore.collection('events').doc(eventId);
-      eventRef.update({
-        comments: firebase.firestore.FieldValue.arrayUnion(comment)
-      }).catch((error) => {
-        console.error("Error posting comment:", error);
-      });
-    }
+        const user = firebase.auth().currentUser;
+        const eventRef = firestore.collection('events').doc(eventId);
+        eventRef.update({
+          comments: firebase.firestore.FieldValue.arrayUnion({
+            text: comment,
+            authorName: user.displayName,
+            authorImage: user.photoURL
+          })
+        }).catch((error) => {
+          console.error("Error posting comment:", error);
+        });
+      }
+      
   
     function editComment(eventId, oldComment, newComment) {
       const eventRef = firestore.collection('events').doc(eventId);
@@ -391,7 +464,27 @@ const firebaseConfig = {
         console.error("Error updating comment:", error);
       });
     }
-  
+
+
+      
+      
+      function editComment(eventId, oldComment, newComment) {
+        const eventRef = firestore.collection('events').doc(eventId);
+        eventRef.get().then((doc) => {
+          if (doc.exists) {
+            const comments = doc.data().comments;
+            const commentIndex = comments.findIndex(comment => comment.text === oldComment);
+            if (commentIndex > -1) {
+              comments[commentIndex].text = newComment;
+              eventRef.update({ comments: comments });
+            }
+          }
+        }).catch((error) => {
+          console.error("Error updating comment:", error);
+        });
+      }
+      
+
     function editEvent(eventId, eventData) {
       // Functionality to edit the event
       document.getElementById('eventTitle').value = eventData.title;
@@ -467,6 +560,15 @@ const firebaseConfig = {
     const calendarButton = document.getElementById('calendarButton');
     const tournamentsButton = document.getElementById('tournamentsButton');
   
+// Set initial display styles for content sections
+document.getElementById('events-content').style.display = 'none';
+document.getElementById('calendar-content').style.display = 'none';
+document.getElementById('tournaments-content').style.display = 'none';
+
+// Show home content by default
+document.getElementById('home-content').style.display = 'block'; // or 'flex' if it's a flex container
+
+
     if (homeButton) {
       homeButton.addEventListener('click', () => {
         document.getElementById('home-content').style.display = 'block';
