@@ -89,6 +89,16 @@ const firebaseConfig = {
   
     const sidebar = document.getElementById('sidebar');
     const toggleButton = document.getElementById('sidebar-toggle');
+    const mainContent = document.getElementById('content');
+    
+    if (toggleButton) {
+        toggleButton.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            toggleButton.classList.toggle('mirrored');
+            mainContent.classList.toggle('expanded');
+        });
+    }
+    
     const userImg = document.getElementById('user-img');
     const userDetails = document.getElementById('userDetails');
     const createEventButton = document.getElementById('createEventButton');
@@ -96,25 +106,11 @@ const firebaseConfig = {
     const postEventButton = document.getElementById('postEventButton');
     const eventPage = document.getElementById('event-page');
   
-    if (toggleButton) {
-      toggleButton.addEventListener('click', () => {
-        sidebar.classList.toggle('collapsed');
-        toggleButton.classList.toggle('mirrored');
-      });
-    }
-  
     if (userImg) {
       userImg.addEventListener('click', () => {
         window.location.href = '/profile.html'; // Replace with the actual path to your profile page
       });
     }
-  
-    if (userDetails) {
-      userDetails.addEventListener('click', () => {
-        window.location.href = '/profile.html'; // Replace with the actual path to your profile page
-      });
-    }
-  
     if (createEventButton) {
       createEventButton.addEventListener('click', () => {
         eventForm.style.display = 'flex';
