@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details</title>
+    <link rel="stylesheet" href="eventpage.css">
+</head>
+<body>
+    <header>
+        <h1>Event Details</h1>
+    </header>
+    <main>
+        <section class="event-details">
+            <div class="event-image-container">
+                <img id="eventImage" src="" alt="Event Image">
+            </div>
+            <div class="event-info">
+                <h2 id="eventTitle"></h2>
+                <p id="eventDescription"></p>
+                <p id="eventDate"></p>
+                <p id="eventLocation"></p>
+                <p id="eventMaxCapacity"></p>
+                <p id="eventAuthor"></p>
+                <button id="likeButton">Like</button>
+                <button id="interestButton">Interested</button>
+                <a href="#" id="backButton">&larr; Back to Events</a>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
+    <script>
+
+const firebaseConfig = {
+    apiKey: "AIzaSyB5Cb1X6xrpKTullZZDV1S8A700uIzm3Ws",
+    authDomain: "easyvent-85031.firebaseapp.com",
+    projectId: "easyvent-85031",
+    storageBucket: "easyvent-85031.appspot.com",
+    messagingSenderId: "496483041148",
+    appId: "1:496483041148:web:e7410ac120211c05232ef9",
+    measurementId: "G-XMEKKNRMG7"
+};
+
+// Initialize Firebase
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+
+const firestore = firebase.firestore();
+
+document.addEventListener('DOMContentLoaded', () => {
+    const eventId = getEventIdFromUrl(); // Function to get event ID from URL
+    if (!eventId) {
+        console.error('Event ID not found in URL.');
+        return;
+    }
+
+    // Elements
+    const eventImageElement = document.getElementById('eventImage');
+    const eventTitleElement = document.getElementById('eventTitle');
+    const eventDescriptionElement = document.getElementById('eventDescription');
+    const eventDateElement = document.getElementById('eventDate');
+    const eventLocationElement = document.getElementById('eventLocation');
+    const eventMaxCapacityElement = document.getElementById('eventMaxCapacity');
+    const eventAuthorElement = document.getElementById('eventAuthor');
+    const likeButton = document.getElementById('likeButton');
+    const interestButton = document.getElementById('interestButton');
+    const backButton = document.getElementById('backButton');
+
+    // Fetch event details from Firestore
+    firestore.collection('events').doc(eventId).get().then(doc => {
+        if (doc.exists) {
+            const event = doc.data();
+
+            // Update HTML with event details
+            eventImageElement.src = event.imageUrl || '/images/default-event-image.jpg';
+            eventTitleElement.textContent = event.title || 'Event Title';
+            eventDescriptionElement.textContent = event.description || 'Event Description';
+            const eventDateObj = new Date(event.date);
+            eventDateElement.textContent = eventDateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) || 'Event Date';
+            eventLocationElement.innerHTML = `Location: <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}" target="_blank">${event.location || 'Event Location'}</a>`;
+            eventMaxCapacityElement.textContent = event.maxCapacity ? `Max Capacity: ${event.maxCapacity}` : 'Not Limited';
+            eventAuthorElement.innerHTML = `Author: <a href="./profile.html?uid=${event.authorUid}">${event.author || 'Event Author'}</a>`;
+
+            // Event listeners for like and interest buttons
+            likeButton.addEventListener('click', () => {
+                likeEvent(eventId);
+            });
+
+            interestButton.addEventListener('click', () => {
+                showInterest(eventId);
+            });
+
+            // Back button to navigate to previous page
+            backButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                window.history.back();
+            });
+        } else {
+            console.error('Event not found in database.');
+        }
+    }).catch(error => {
+        console.error('Error fetching event:', error);
+    });
+});
+
+// Function to handle liking an event
+function likeEvent(eventId) {
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        console.log('User is not logged in.');
+        return;
+    }
+
+    const eventRef = firestore.collection('events').doc(eventId);
+
+    eventRef.get().then(doc => {
+        if (doc.exists) {
+            const event = doc.data();
+            const likes = event.likes || {};
+
+            if (likes[user.uid]) {
+                delete likes[user.uid]; // Unlike
+            } else {
+                likes[user.uid] = true; // Like
+            }
+
+            eventRef.update({ likes });
+        }
+    }).catch(error => {
+        console.error("Error liking event:", error);
+    });
+}
+
+// Function to handle showing interest in an event
+function showInterest(eventId) {
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        console.log('User is not logged in.');
+        return;
+    }
+
+    const eventRef = firestore.collection('events').doc(eventId);
+
+    eventRef.get().then(doc => {
+        if (doc.exists) {
+            const event = doc.data();
+            const interested = event.interested || {};
+
+            if (interested[user.uid]) {
+                delete interested[user.uid]; // Unmark interest
+            } else {
+                interested[user.uid] = true; // Mark interest
+            }
+
+            eventRef.update({ interested });
+        }
+    }).catch(error => {
+        console.error("Error showing interest in event:", error);
+    });
+}
+
+// Function to extract event ID from URL query parameters
+function getEventIdFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('eventId');
+}
+
+    </script>
+</body>
+</html>

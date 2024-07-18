@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/sidebar.css">
+    <link rel="stylesheet" href="events.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <title>Events | EasyVent</title>
+    <style>
+        /* Additional styles for event creation modal */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            z-index: 200;
+        }
+
+        .event-modal {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            width: 400px;
+            max-width: 90%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .event-modal h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .event-modal input, .event-modal textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .event-modal button {
+            padding: 10px 15px;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .event-modal .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Styles for events display */
+        .event-card {
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar close">
+        <header>
+            <div class="image-text">
+                <span class="image">
+                    <img id="img" src="/images/logo.png" alt="easyvent logo">
+                </span>
+                <div class="text logo-text">
+                    <span class="name">EasyVent</span>
+                    <span class="profession">Explore & Connect</span>
+                </div>
+            </div>
+            <i class='bx bx-chevron-right toggle'></i>
+        </header>
+        <div class="menu-bar">
+            <div class="menu">
+                <li class="nav-link">
+                    <a href="/eventCreate.html">
+                        <i class='bx bx-plus-circle icon'></i>
+                        <span class="text nav-text">Create Post</span>
+                    </a>
+                </li>
+                <li class="search-box">
+                    <i class='bx bx-search icon'></i>
+                    <input type="text" placeholder="Search...">
+                </li>
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="/index.html">
+                            <i class='bx bx-home-alt icon'></i>
+                            <span class="text nav-text">Home</span>
+                        </a>
+                    </li>
+                    <li style="background-color: #3a3b3c; border-radius: 6px;" class="nav-link selected">
+                        <a href="./events.html">
+                            <i class='bx bx-party icon'></i>
+                            <span class="text nav-text">Events</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="./tournaments.html">
+                            <i class='bx bx-trophy icon'></i>
+                            <span class="text nav-text">Tournaments</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="./calendar.html">
+                            <i class='bx bx-calendar icon'></i>
+                            <span class="text nav-text">Calendar</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="./gallery.html">
+                            <i class='bx bx-image icon'></i>
+                            <span class="text nav-text">Gallery</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="bottom-content">
+                <li class="nav-link" id="loginButton">
+                    <a href="#">
+                        <i class='bx bx-log-in icon'></i>
+                        <span class="text nav-text">Login</span>
+                    </a>
+                </li>
+                <li class="mode">
+                    <div class="sun-moon">
+                        <i class='bx bx-moon icon moon'></i>
+                        <i class='bx bx-sun icon sun'></i>
+                    </div>
+                    <span class="mode-text text">Dark mode</span>
+                    <div class="toggle-switch">
+                        <span class="switch"></span>
+                    </div>
+                </li>
+                <div id="user-info">
+                    <img src="/images/profile-picture.jpg" id="userImg">
+                    <div class="user-details">
+                        <div id="userName"></div>
+                        <div id="userEmail"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <section class="home">
+        <div class="text">Events</div>
+        <button style="display: none;" id="createEventButton">Create Event</button>
+        <div id="eventsContainer"></div>
+    </section>
+
+
+    <div class="overlay" id="eventModal">
+        <div class="event-modal">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <h2 id="modalTitle">Create/Edit Event</h2>
+            <input type="text" id="eventTitle" placeholder="Event Title">
+            <textarea id="eventDescription" rows="4" placeholder="Event Description"></textarea>
+            <input type="date" id="eventDateTime">
+            <input type="text" id="eventLocation" placeholder="Event Location">
+            <div id="dragDropContainer" class="drag-and-drop-container">
+                <p id="dragDropText">Choose a file, or drag it here</p>
+                <input type="file" id="eventImageUpload" accept="image/*" style="display: none;">
+                <img id="uploadImg" src="./images/placeholder-image.png" alt="">
+            </div>
+            <p id="uploadStatus"></p>
+            <button id="saveEventButton">Save Event</button>
+            <input type="hidden" id="eventId" value="">
+        </div>
+    </div>
+    <div id="notificationContainer"></div>
+
+
+    <div class="dropdown-content" id="dropdown-${eventId}">
+        <!-- The buttons will be dynamically added/removed in JavaScript -->
+      </div>
+      
+
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-storage.js"></script>
+
+    <script src="events.js"></script>
+    <script src="/script.js"></script>
+</body>
+
+</html>

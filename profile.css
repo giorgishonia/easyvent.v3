@@ -1,0 +1,110 @@
+#profileBannerImg{
+  width: 100%;
+height: 200px;
+object-fit: cover;
+object-position: top;
+border-radius: 10px;
+border-top-left-radius: 0px;
+border-top-right-radius: 0px;
+}
+
+#profilePictureImg{
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+
+}
+
+.edit-button {
+  position: absolute;
+  display: none;
+  color: white;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.edit-button:hover{
+  background-color: rgba(0, 0, 0, 0.7);
+
+}
+
+.profile-banner-wrapper:hover .edit-button,
+.profile-picture-wrapper:hover .edit-button {
+  display: block;
+}
+
+.profile-banner-wrapper {
+  position: relative;
+}
+
+.profile-picture-wrapper {
+  position: relative;
+  width: 120px;
+  border-radius: 50%;
+  transform: translateY(-70px) translateX(40px);
+
+}
+
+#editBannerButton {
+  top: 10px;
+  align-items: center;
+  right: 10px;
+  padding: 10px;
+  gap: 5px;
+}
+
+#editProfilePictureButton {
+  width: 100%;
+  height: 120px;
+  border-radius: 50%;
+  position: absolute;
+  transform: translateY(-126px) translateX(0px);
+}
+
+/* Dark mode styles */
+body.dark #profileContainer {
+  color: white;
+}
+
+body.dark #profileContainer h1, 
+body.dark #profileContainer p, 
+body.dark #profileContainer h2 {
+  color: white;
+}
+
+body.dark .edit-button {
+  background-color: rgba(0, 0, 0, 0.641); /* Dark background on hover in dark mode */
+  color: rgb(255, 255, 255); /* Dark text in dark mode */
+}
+
+body.dark .edit-button:hover {
+  background-color: rgba(0, 0, 0, 0.641); /* Dark background on hover in dark mode */
+  color: rgb(255, 255, 255); /* Light text on hover in dark mode */
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#profilePictureImg{
+  width: 120px;
+}
+
+.follow-button {
+  background-color: #3498db;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.follow-button:hover {
+  background-color: #2980b9;
+}
+
+

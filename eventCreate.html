@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<!-- Coding by CodingLab | www.codinglabweb.com -->
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!----======== CSS ======== -->
+    <link rel="stylesheet" href="sidebar.css">
+    <link rel="stylesheet" href="eventCreate.css">
+
+    <!----===== Boxicons CSS ===== -->
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+
+    <title>EasyVent</title>
+</head>
+
+<body>
+    <nav class="sidebar close">
+        <header>
+            <div class="image-text">
+                <span class="image">
+                    <img id="img" src="./images/logo.png" alt="easyvent logo">
+                </span>
+                <div class="text logo-text">
+                    <span class="name">EasyVent</span>
+                    <span class="profession">Explore & Connect</span>
+                </div>
+            </div>
+            <i class='bx bx-chevron-right toggle'></i>
+        </header>
+        <div class="menu-bar">
+            <div class="menu">
+                <li style="background-color: #3a3b3c; border-radius: 6px;" class="nav-link selected">
+                    <a href="/eventCreate.html">
+                        <i class='bx bx-plus-circle icon'></i>
+                        <span class="text nav-text">Create Post</span>
+                    </a>
+                </li>
+                <li class="search-box">
+                    <i class='bx bx-search icon'></i>
+                    <input type="text" placeholder="Search...">
+                </li>
+                <ul  class="menu-links">
+                    <li class="nav-link">
+                        <a href="./index.html">
+                            <i class='bx bx-home-alt icon'></i>
+                            <span class="text nav-text">Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="./pages/events.html">
+                            <i class='bx bx-party icon'></i>
+                            <span class="text nav-text">Events</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="./pages/tournaments.html">
+                            <i class='bx bx-trophy icon'></i>
+                            <span class="text nav-text">Tournaments</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="./pages/calendar.html">
+                            <i class='bx bx-calendar icon'></i>
+                            <span class="text nav-text">Calendar</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="./pages/gallery.html">
+                            <i class='bx bx-image icon'></i>
+                            <span class="text nav-text">Gallery</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="bottom-content">
+                  <li class="nav-link" id="loginButton">
+                    <a href="#">
+                        <i class='bx bx-log-in icon' ></i>
+                        <span class="text nav-text">Login</span>
+                    </a>
+                </li>
+                <li class="mode">
+                    <div class="sun-moon">
+                        <i class='bx bx-moon icon moon'></i>
+                        <i class='bx bx-sun icon sun'></i>
+                    </div>
+                    <span class="mode-text text">Dark mode</span>
+                    <div class="toggle-switch">
+                        <span class="switch"></span>
+                    </div>
+                </li>
+                <div id="user-info">
+                  <img src="./images/profile-picture.jpg" id="userImg">
+                  <div class="user-details">
+                    <div id="userName"></div>
+                    <div id="userEmail"></div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <section class="home">
+        <div class="text">Create Event</div>
+        <div class="event-creation-container">
+            <div class="event-details">
+                <h2>Create Event</h2>
+                <input type="text" id="eventTitle" placeholder="Event Title">
+                <textarea id="eventDescription" rows="4" placeholder="Event Description"></textarea>
+                <input type="date" id="eventDateTime">
+                <input type="text" id="eventLocation" placeholder="Event Location">
+                <div id="dragDropContainer" class="drag-and-drop-container">
+                    <p id="dragDropText">Choose a file, or drag it here</p>
+                    <input type="file" id="eventImageUpload" accept="image/*" style="display: none;">
+                    <img id="uploadImg" src="./images/placeholder-image.png" alt="">
+                </div>
+                <p id="uploadStatus"></p>
+                <button id="saveEventButton">Create Event</button>
+            </div>
+            <div class="event-preview">
+                <h2>Event Preview</h2>
+                <div id="eventPreview">
+                    <h3 id="previewTitle">Event Title</h3>
+                    <p id="previewDescription">Event Description</p>
+                    <p id="previewDateTime">Event Date and Time</p>
+                    <p id="previewLocation">Event Location</p>
+                    <img id="previewImage" src="./images/placeholder-image.png" alt="Event Preview">
+                    <div id="voteButtons">
+                        <button id="upvoteButton" >Upvote</button>
+                        <span id="voteCount">0</span>
+                        <button id="downvoteButton" >Downvote</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="notification" id="notification"></div>
+    
+    <button id="loginButton">Login with Google</button>
+</body>
+<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+
+
+
+<!-- Add Firebase products that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-storage.js"></script>
+<script src="./eventCreate.js"></script>
+<script  src="script.js"></script>
+</html>

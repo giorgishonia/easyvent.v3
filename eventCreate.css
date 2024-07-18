@@ -1,0 +1,144 @@
+
+  
+  .event-creation-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  
+  .event-details,
+  .event-preview {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 48%;
+  }
+  
+  .event-details h2,
+  .event-preview h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .event-details input,
+  .event-details textarea,
+  .event-details button,
+  .event-details #dragDropContainer {
+    margin-bottom: 15px;
+  }
+  
+  .event-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .event-preview #eventPreview {
+    text-align: center;
+  }
+  
+  .event-preview img {
+    max-width: 100%;
+    max-height: 200px;
+    margin-top: 10px;
+    border-radius: 5px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .drag-and-drop-container {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.drag-over {
+    border-color: #4CAF50;
+}
+
+#dragDropText {
+    margin: 0;
+    font-size: 16px;
+}
+
+  
+  .drag-and-drop-container img {
+    max-width: 100%;
+    max-height: 150px;
+    margin-top: 10px;
+    display: none;
+  }
+  
+  #uploadStatus {
+    margin-top: 10px;
+    color: #007bff;
+    font-weight: bold;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .event-creation-container {
+      flex-direction: column;
+    }
+  
+    .event-details,
+    .event-preview {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  }
+  
+
+  textarea {
+    resize: none;
+  }
+
+  body.dark .event-details{
+    background-color: #242526;
+    color: white;
+}
+
+body.dark .event-preview{
+    background-color: #242526;
+    color: white;
+}
+
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    display: none;
+    z-index: 999;
+    animation: slide-in 0.5s forwards, fade-out 0.5s 1.5s forwards;
+}
+
+.success {
+    background-color: #4CAF50; /* Green background */
+    color: white;
+}
+
+.error {
+    background-color: #f44336; /* Red background */
+    color: white;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}

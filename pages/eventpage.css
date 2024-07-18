@@ -1,0 +1,48 @@
+.event-details {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.event-details img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.event-details h2 {
+    margin-top: 20px;
+    font-size: 24px;
+}
+
+.event-details p {
+    margin: 10px 0;
+}
+
+.comments-section {
+    margin-top: 20px;
+}
+
+.comment {
+    background: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.comment img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.comment-author {
+    font-weight: bold;
+}
+
+.comment-text {
+    margin-left: 40px;
+}
