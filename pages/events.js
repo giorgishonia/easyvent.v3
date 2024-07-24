@@ -18,6 +18,368 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 
 let currentEventId = null;
+let currentCategory = 'all'; // To keep track of the currently selected category
+let selectedCategories = [];
+let uid = null; // Define uid variable
+
+
+function formatCreationDate(date) {
+  if (!date || !date.seconds) {
+      console.error('Invalid date format:', date);
+      return 'Unknown date';
+  }
+
+  const creationDate = new Date(date.seconds * 1000);
+  const currentDate = new Date();
+  const options = { day: 'numeric', month: 'long' };
+  let formattedDate = creationDate.toLocaleDateString('en-US', options);
+
+  if (creationDate.getFullYear() !== currentDate.getFullYear()) {
+      formattedDate = `${creationDate.getDate()} ${creationDate.toLocaleDateString('en-US', { month: 'short' })} ${creationDate.getFullYear()}`;
+  }
+
+  return formattedDate;
+}
+
+function getCategoryClass(category) {
+  switch (category) {
+    case 'Music':
+      return 'category-music';
+    case 'Sports':
+      return 'category-sports';
+    case 'Technology':
+      return 'category-technology';
+    case 'Art':
+      return 'category-art';
+    case 'Education':
+      return 'category-education';
+    case 'Fun':
+      return 'category-fun';
+    case 'Gaming':
+      return 'category-gaming';
+    case 'Food':
+      return 'category-food';
+    case 'Movies':
+      return 'category-movies';
+    case 'Theater':
+      return 'category-theater';
+    case 'Fashion':
+      return 'category-fashion';
+    case 'Health':
+      return 'category-health';
+    case 'For Kids':
+      return 'category-kids';
+    case 'For Pets':
+      return 'category-pets';
+    case 'Charity':
+      return 'category-charity';
+    case 'Travel':
+      return 'category-travel';
+    default:
+      return '';
+  }
+}
+
+function getCategoryIcon(category) {
+  switch (category) {
+    case 'Music':
+      return '🎵';
+    case 'Sports':
+      return '⚽';
+    case 'Technology':
+      return '💻';
+    case 'Art':
+      return '🎨';
+    case 'Education':
+      return '📚';
+    case 'Fun':
+      return '🥳';
+    case 'Gaming':
+      return '🎮';
+    case 'Food':
+      return '🍽️';
+    case 'Movies':
+      return '🎬';
+    case 'Theater':
+      return '🎭';
+    case 'Fashion':
+      return '👗';
+    case 'Health':
+      return '💪';
+    case 'For Kids':
+      return '🧒';
+    case 'For Pets':
+      return '🐾';
+    case 'Charity':
+      return '🤲';
+    case 'Travel':
+      return '✈️';
+    default:
+      return '';
+  }
+}
+
+function displayEvents(uid) {
+  const eventsContainer = document.getElementById('eventsContainer');
+  eventsContainer.innerHTML = '';
+
+  let query = db.collection('events').orderBy('dateTime', 'asc');
+
+  if (selectedCategories.length > 0) {
+    query = query.where('category', 'in', selectedCategories);
+  }
+
+  query.get().then(querySnapshot => {
+    querySnapshot.forEach(doc => {
+      const event = doc.data();
+      const eventId = doc.id;
+      const categoryClass = getCategoryClass(event.category);
+      const categoryIcon = getCategoryIcon(event.category);
+      const formattedCreationDate = formatRelativeTime(event.createdAt || { seconds: Date.now() / 1000 });
+
+      const eventCard = document.createElement('div');
+      eventCard.classList.add('event-card');
+      eventCard.id = `event-card-${eventId}`;
+
+      if (document.body.classList.contains('dark-theme')) {
+        eventCard.classList.add('dark-theme');
+      }
+
+      const editIndicatorHTML = event.editedAt ? `
+      <div class="edit-indicator-container">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+          <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+        </svg>
+        <div class="tooltip">This event has been edited</div>
+      </div>` : '';
+    
+
+      eventCard.innerHTML = `
+        <div class="left-panel">
+          <img id="event-image-${eventId}" class="event-image" src="${event.imageUrl}" alt="${event.title}">
+        </div>
+        <div class="right-panel">
+          <div class="upper-panel">
+            <p class="category-text ${categoryClass}">${categoryIcon} ${event.category}</p>
+            <div id="event-creation-date">${formattedCreationDate}</div> <!-- Show creation date -->
+            <div id="edit-indicator" class="${event.editedAt ? 'show' : 'hidden'}">${editIndicatorHTML}</div>
+          </div>
+          <h2 class="event-title">${event.title}</h2>
+          <div class="lower-panel">
+            <p id="event-date">${event.dateTime.toDate().toLocaleString()}</p>
+            <p id="event-location">${event.location}</p>
+            <div id="like-container-${eventId}">
+              <button class="like-button" data-id="${eventId}">
+                <svg id="like-icon-${eventId}" class="like-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                </svg>
+                <span class="like-count">${event.likeCount || 0}</span>
+              </button>
+            </div>
+            <button class="comment-button" data-id="${eventId}">Comment</button>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="dropbtn">...</button>
+          <div class="dropdown-content" id="dropdown-${eventId}">
+            <!-- Edit and Delete buttons will be added dynamically -->
+          </div>
+        </div>
+      `;
+      eventsContainer.appendChild(eventCard);
+
+      const dropdownContent = document.getElementById(`dropdown-${eventId}`);
+      dropdownContent.innerHTML = '';
+
+      if (event.createdBy === uid) {
+        dropdownContent.insertAdjacentHTML('afterbegin', `
+          <button class="edit-button" data-id="${eventId}">Edit</button>
+          <button class="delete-button" data-id="${eventId}">Delete</button>
+        `);
+      }
+
+      dropdownContent.insertAdjacentHTML('beforeend', `
+        <button class="report-button" data-id="${eventId}">Report</button>
+      `);
+
+      const horizontalLine = document.createElement('hr');
+      eventsContainer.appendChild(horizontalLine);
+
+      // Check if user has liked the event
+      const likeIcon = document.querySelector(`#like-icon-${eventId}`);
+      if (likeIcon && event.userLikes && event.userLikes[uid]) {
+        likeIcon.classList.add('liked');
+      } else {
+        likeIcon.classList.remove('liked');
+      }
+    });
+
+    console.log('Events displayed successfully.');
+
+    const likeButtons = document.querySelectorAll('.like-button');
+    likeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const eventId = button.getAttribute('data-id');
+        handleLikeEvent(eventId);
+      });
+    });
+
+    attachEventListeners();
+  }).catch(error => {
+    console.error('Error fetching events:', error);
+  });
+}
+
+
+
+function formatRelativeTime(date) {
+  if (!date || !date.seconds) {
+      console.error('Invalid date format:', date);
+      return 'Unknown date';
+  }
+
+  const now = new Date();
+  const createdAt = new Date(date.seconds * 1000);
+  const diffInSeconds = Math.floor((now - createdAt) / 1000);
+
+  if (diffInSeconds < 60) {
+      return '0m ago'; // Less than a minute
+  }
+
+  const intervals = [
+      { label: 'd', value: 86400 },  // 24 * 60 * 60
+      { label: 'h', value: 3600 },   // 60 * 60
+      { label: 'm', value: 60 }       // 60
+  ];
+
+  for (const interval of intervals) {
+      const value = Math.floor(diffInSeconds / interval.value);
+      if (value >= 1) {
+          return `${value}${interval.label} ago`;
+      }
+  }
+
+  return 'Just now';
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const editIndicator = document.getElementById('edit-indicator');
+
+  function showEditIndicator() {
+    editIndicator.classList.remove('hidden');
+    editIndicator.classList.add('show');
+    editIndicator.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+      </svg>`;
+  }
+
+  function hideEditIndicator() {
+    editIndicator.classList.remove('show');
+    editIndicator.classList.add('hidden');
+  }
+
+  // Example usage
+  // Call showEditIndicator() when an event is edited
+});
+
+function handleLikeEvent(eventId) {
+  const userId = firebase.auth().currentUser.uid;
+
+  if (!userId) {
+    console.error('User is not authenticated.');
+    return;
+  }
+
+  const eventRef = firestore.collection('events').doc(eventId);
+
+  eventRef.get().then(doc => {
+    if (!doc.exists) {
+      throw "Event does not exist!";
+    }
+
+    const eventData = doc.data();
+    const userLikes = eventData.userLikes || {};
+    const likeCount = eventData.likeCount || 0;
+
+    let newLikeCount;
+    if (userLikes[userId]) {
+      delete userLikes[userId];
+      newLikeCount = likeCount - 1;
+    } else {
+      userLikes[userId] = true;
+      newLikeCount = likeCount + 1;
+    }
+
+    return eventRef.update({
+      likeCount: newLikeCount,
+      userLikes: userLikes
+    }).then(() => {
+      // Update the UI with the new like count
+      const likeCountElement = document.querySelector(`#like-container-${eventId} .like-count`);
+      if (likeCountElement) {
+        likeCountElement.innerText = newLikeCount;
+      } else {
+        console.error(`Like count element not found for event ID: ${eventId}`);
+      }
+
+      // Toggle the liked class on the heart icon
+      const likeIcon = document.querySelector(`#like-icon-${eventId}`);
+      if (likeIcon) {
+        if (userLikes[userId]) {
+          likeIcon.classList.add('liked');
+        } else {
+          likeIcon.classList.remove('liked');
+        }
+      } else {
+        console.error(`Like icon not found for event ID: ${eventId}`);
+      }
+
+      return newLikeCount;
+    });
+  }).catch(error => {
+    console.error('Error updating like:', error);
+  });
+}
+
+const provider = new firebase.auth.GoogleAuthProvider();
+
+// Function to check and save user data
+function checkAndSaveUserData(user) {
+  const userData = {
+      name: user.displayName,
+      email: user.email,
+      photoURL: user.photoURL, // Add the photoURL field
+      createdAt: firebase.firestore.Timestamp.fromDate(new Date())
+  };
+
+  db.collection('users').doc(user.uid).set(userData, { merge: true })
+      .then(() => {
+          console.log('User data saved successfully.');
+      })
+      .catch((error) => {
+          console.error('Error saving user data:', error);
+      });
+}
+
+// Check if the user is signed in on page load
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        // User is signed in, check and save user data
+        checkAndSaveUserData(user);
+    } else {
+        // User is not signed in, initiate sign-in process
+        firebase.auth().signInWithPopup(provider)
+            .then((result) => {
+                const user = result.user;
+                checkAndSaveUserData(user);
+            })
+            .catch((error) => {
+                console.error('Error during sign-in:', error);
+            });
+    }
+});
 
 function formatEventDate(date) {
   const eventDate = new Date(date.seconds * 1000);
@@ -32,100 +394,96 @@ function formatEventDate(date) {
   return formattedDate;
 }
 
-function displayEvents(uid) {
-  const eventsContainer = document.getElementById('eventsContainer');
-  eventsContainer.innerHTML = '';
 
-  firestore.collection('events').orderBy('dateTime', 'asc').get()
+function attachEventListeners() {
+  document.querySelectorAll('.edit-button').forEach(button => {
+    button.removeEventListener('click', handleEdit);
+    button.addEventListener('click', handleEdit);
+  });
+
+  document.querySelectorAll('.delete-button').forEach(button => {
+    button.removeEventListener('click', handleDelete);
+    button.addEventListener('click', handleDelete);
+  });
+
+  document.querySelectorAll('.report-button').forEach(button => {
+    button.removeEventListener('click', handleReport);
+    button.addEventListener('click', handleReport);
+  });
+
+
+  document.querySelectorAll('.event-image').forEach(img => {
+    img.removeEventListener('click', handleFullscreenImage);
+    img.addEventListener('click', handleFullscreenImage);
+  });
+}
+
+function handleFullscreenImage(event) {
+  const eventId = event.target.id.split('-').pop();
+  window.location.href = `eventPage.html?eventId=${eventId}`;
+}
+
+
+function handleCategoryClick(category) {
+  const index = selectedCategories.indexOf(category);
+
+  if (index === -1) {
+    selectedCategories.push(category);
+  } else {
+    selectedCategories.splice(index, 1);
+  }
+
+  console.log('Selected categories:', selectedCategories); // Debugging
+  displayEvents(uid);
+  updateCategoryButtonClasses();
+}
+
+function updateCategoryButtonClasses() {
+  document.querySelectorAll('#category-buttons .category-button').forEach(button => {
+    const category = button.getAttribute('data-category');
+    if (selectedCategories.includes(category)) {
+      button.classList.add('selected-category');
+    } else {
+      button.classList.remove('selected-category');
+    }
+  });
+}
+
+document.querySelectorAll('#category-buttons .category-button').forEach(button => {
+  button.addEventListener('click', () => {
+    const category = button.getAttribute('data-category');
+    handleCategoryClick(category);
+  });
+});
+
+
+
+updateCategoryButtonClasses();
+
+function fetchEvents() {
+  let query = firestore.collection('events');
+
+  if (selectedCategories.length > 0) {
+    // Use a compound query if there are multiple categories
+    query = query.where('category', 'in', selectedCategories);
+  }
+
+  query
+    .orderBy('dateTime', 'asc')
+    .get()
     .then(querySnapshot => {
+      const events = [];
       querySnapshot.forEach(doc => {
-        const event = doc.data();
-        const eventId = doc.id;
-        const eventCard = document.createElement('div');
-        eventCard.classList.add('event-card');
-        
-        // Check and apply theme
-        if (document.body.classList.contains('dark-theme')) {
-          eventCard.classList.add('dark-theme');
-      }
-
-        eventCard.innerHTML = `
-          <h3>${event.title}</h3>
-          <img src="${event.imageUrl}" alt="${event.title}" style="width:100%; height:auto;">
-          <p>${event.description}</p>
-          <p>${formatEventDate(event.dateTime)}</p>
-          <p>Location: ${event.location}</p>
-          <div>
-            <button class="vote-button upvote-button" data-id="${eventId}">Upvote</button>
-            <button class="vote-button downvote-button" data-id="${eventId}">Downvote</button>
-            <button class="fullscreen-button" data-id="${eventId}">
-              <img src="fullscreen_icon.png" alt="Fullscreen" style="width:16px; height:16px;">
-            </button>
-            <span id="voteCount-${eventId}">${event.voteCount}</span>
-          </div>
-          <div class="dropdown">
-            <button class="dropbtn">...</button>
-            <div class="dropdown-content" id="dropdown-${eventId}">
-              <!-- Edit and Delete buttons will be added dynamically -->
-            </div>
-          </div>
-        `;
-
-        eventsContainer.appendChild(eventCard);
-
-        // Check if the current user is the author of the event
-        if (event.createdBy === uid) {
-          const dropdownContent = document.getElementById(`dropdown-${eventId}`);
-          dropdownContent.insertAdjacentHTML('afterbegin', `
-            <button class="edit-button" data-id="${eventId}">Edit</button>
-            <button class="delete-button" data-id="${eventId}">Delete</button>
-          `);
-        } else {
-        }
-
-        // Add the report button for all users
-        const dropdownContent = document.getElementById(`dropdown-${eventId}`);
-        dropdownContent.insertAdjacentHTML('beforeend', `
-          <button class="report-button" data-id="${eventId}">Report</button>
-        `);
+        events.push(doc.data());
       });
-
-      // Attach event listeners to upvote/downvote buttons
-      document.querySelectorAll('.upvote-button').forEach(button => {
-        button.addEventListener('click', handleUpvote);
-      });
-
-      document.querySelectorAll('.downvote-button').forEach(button => {
-        button.addEventListener('click', handleDownvote);
-      });
-
-      // Attach event listeners to edit/delete/report/fullscreen buttons
-      document.querySelectorAll('.edit-button').forEach(button => {
-        button.addEventListener('click', handleEdit);
-      });
-
-      document.querySelectorAll('.delete-button').forEach(button => {
-        button.addEventListener('click', handleDelete);
-      });
-
-      document.querySelectorAll('.report-button').forEach(button => {
-        button.addEventListener('click', handleReport);
-      });
-
-      document.querySelectorAll('.fullscreen-button').forEach(button => {
-        button.addEventListener('click', handleFullscreen);
-      });
+      displayEvents(events);
     })
     .catch(error => {
       console.error('Error fetching events:', error);
     });
 }
 
-// Function to handle fullscreen button click
-function handleFullscreen(event) {
-  const eventId = event.target.closest('button').getAttribute('data-id');
-  window.location.href = `eventPage.html?eventId=${eventId}`;
-}
+
 
 function showNotification(message, type) {
   const notification = document.createElement('div');
@@ -150,7 +508,7 @@ function handleEdit(event) {
   const eventId = event.target.getAttribute('data-id');
   currentEventId = eventId; // Set the currentEventId when editing
 
-  // Replace 'db' with your actual Firestore instance (e.g., firestore.collection('events'))
+  // Fetch event data and populate the form
   db.collection('events').doc(eventId).get()
       .then(doc => {
           if (doc.exists) {
@@ -177,12 +535,15 @@ function handleEdit(event) {
       })
       .catch(error => {
           console.error('Error fetching event:', error);
-      });
-      const eventCard = document.getElementById(`event-card-${eventId}`);
-      if (document.body.classList.contains('dark-theme')) {
-          eventCard.classList.add('dark-theme');
-      }
+      }); 
+
+  const eventCard = document.getElementById(`event-card-${eventId}`);
+  if (document.body.classList.contains('dark-theme')) {
+      eventCard.classList.add('dark-theme');
+  }
 }
+
+
 
 // Function to extract file name from URL
 function getFileNameFromUrl(url) {
@@ -223,102 +584,28 @@ function handleDelete(event) {
 
 function handleReport(event) {
   const eventId = event.target.getAttribute('data-id');
-  // Add your logic to report the event
-  // Example logic to open a report modal
-  showNotification('Event reported.', 'success');
-}
-
-// Voting logic
-function handleVote(eventId, voteType) {
-  const userId = firebase.auth().currentUser.uid;
-
-  firestore.collection('votes').doc(`${userId}_${eventId}`).get()
-    .then(doc => {
-      if (!doc.exists) {
-        return firestore.runTransaction(transaction => {
-          const eventRef = firestore.collection('events').doc(eventId);
-          return transaction.get(eventRef).then(eventDoc => {
-            if (!eventDoc.exists) {
-              throw "Event does not exist!";
-            }
-
-            let newVoteCount = eventDoc.data().voteCount;
-
-            if (voteType === 'upvote') {
-              newVoteCount += 1;
-            } else {
-              newVoteCount -= 1;
-            }
-
-            transaction.update(eventRef, {
-              voteCount: newVoteCount
-            });
-
-            transaction.set(firestore.collection('votes').doc(`${userId}_${eventId}`), {
-              eventId,
-              userId,
-              voteType
-            });
-
-            return Promise.resolve(newVoteCount);
-          });
-        });
-      } else {
-        const currentVoteType = doc.data().voteType;
-
-        if (currentVoteType === voteType) {
-          return Promise.reject("You have already voted this way.");
-        }
-
-        return firestore.runTransaction(transaction => {
-          const eventRef = firestore.collection('events').doc(eventId);
-          return transaction.get(eventRef).then(eventDoc => {
-            if (!eventDoc.exists) {
-              throw "Event does not exist!";
-            }
-
-            let newVoteCount = eventDoc.data().voteCount;
-
-            if (voteType === 'upvote') {
-              newVoteCount += 2;
-            } else {
-              newVoteCount -= 2;
-            }
-
-            transaction.update(eventRef, {
-              voteCount: newVoteCount
-            });
-
-            transaction.update(firestore.collection('votes').doc(`${userId}_${eventId}`), {
-              voteType
-            });
-
-            return Promise.resolve(newVoteCount);
-          });
-        });
-      }
+  const reason = prompt('Please provide a reason for reporting this event:');
+  if (reason) {
+    firestore.collection('reports').add({
+      eventId: eventId,
+      reason: reason,
+      reportedAt: firebase.firestore.FieldValue.serverTimestamp()
     })
-    .then(newVoteCount => {
-      document.getElementById(`voteCount-${eventId}`).textContent = newVoteCount;
+    .then(() => {
+      showNotification('Event reported successfully.', 'success');
     })
     .catch(error => {
-      console.error('Error voting:', error);
+      console.error('Error reporting event:', error);
+      showNotification('Failed to report event.', 'error');
     });
+    const eventCard = document.getElementById(`event-card-${eventId}`);
+    if (document.body.classList.contains('dark-theme')) {
+        eventCard.classList.add('dark-theme');
+    }
+  }
 }
 
-function handleUpvote(event) {
-  const eventId = event.target.getAttribute('data-id');
-  throttleButton(event.target, 5000); // Disable button for 5 seconds
-  handleVote(eventId, 'upvote');
-}
 
-function handleDownvote(event) {
-  const eventId = event.target.getAttribute('data-id');
-  throttleButton(event.target, 5000); // Disable button for 5 seconds
-  handleVote(eventId, 'downvote');
-}
-
-// Function to handle the throttling
 function throttleButton(button, timeout) {
   button.disabled = true;
   setTimeout(() => {
@@ -328,10 +615,15 @@ function throttleButton(button, timeout) {
 
 auth.onAuthStateChanged(user => {
   if (user) {
-    displayEvents(user.uid);
+    uid = user.uid; // Ensure uid is set
+    displayEvents(uid);
   } else {
+    uid = null;
+    // Handle unauthenticated state
   }
 });
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const dragDropContainer = document.getElementById('dragDropContainer');
@@ -450,33 +742,61 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   
 
+  firestore.collection('events')
+  .orderBy('dateTime', 'asc')
+  .get()
+  .then(querySnapshot => {
+    if (querySnapshot.empty) {
+      console.log('No matching documents.');
+      return;
+    }
+    querySnapshot.forEach(doc => {
+      console.log(doc.id, '=>', doc.data());
+    });
+  })
+  .catch(error => {
+    console.error('Error fetching events:', error);
+  });
+
+
+
   function saveEvent(title, description, dateTime, location, imageUrl, eventId) {
     const eventRef = eventId ? firestore.collection('events').doc(eventId) : firestore.collection('events').doc();
     const userId = firebase.auth().currentUser.uid;
-  
-    eventRef.set({
-      title,
-      description,
-      dateTime,
-      location,
-      imageUrl,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      voteCount: 0,
-      createdBy: userId // Set the author ID
-    }, { merge: true }).then(() => {
-      console.log('Event saved successfully');
-      document.getElementById('eventModal').style.display = 'none';
-      resetModal();
-      displayEvents(userId);
-  
-      // Show success notification
-      showNotification('Event edited successfully', 'success');
-    }).catch(error => {
-      console.error('Error saving event:', error);
-      // Show error notification
-      showNotification('Failed to edit event', 'error');
-    });
-  }
+
+    // Define the event data to be saved
+    const eventData = {
+        title,
+        description,
+        dateTime,
+        location,
+        imageUrl,
+        editedAt: firebase.firestore.FieldValue.serverTimestamp(), // Set the editedAt timestamp
+        createdBy: userId // Set the author ID
+    };
+
+    if (!eventId) {
+        // Creating a new event
+        eventData.createdAt = firebase.firestore.FieldValue.serverTimestamp(); // Set the createdAt timestamp
+    }
+
+    eventRef.set(eventData, { merge: true })
+        .then(() => {
+            console.log('Event saved successfully');
+            document.getElementById('eventModal').style.display = 'none';
+            resetModal();
+            displayEvents(userId);
+
+            // Show success notification
+            showNotification('Event edited successfully', 'success');
+        })
+        .catch(error => {
+            console.error('Error saving event:', error);
+            // Show error notification
+            showNotification('Failed to edit event', 'error');
+        });
+}
+
 
   function resetModal() {
     document.getElementById('eventTitle').value = '';
@@ -490,5 +810,92 @@ document.addEventListener('DOMContentLoaded', () => {
     currentEventId = null; // Reset the currentEventId after saving
     currentImageUrl = ''; // Reset the currentImageUrl after saving
   }
+
+
 });
+
+
+async function fetchLeaderboardData() {
+  const leaderboard = [];
+
+  // Fetch all users
+  const usersSnapshot = await db.collection('users').get();
+  const users = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+  for (const user of users) {
+    // Fetch events created by the user
+    const eventsSnapshot = await db.collection('events').where('createdBy', '==', user.id).get();
+    const events = eventsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    const totalLikes = events.reduce((sum, event) => sum + (event.likeCount || 0), 0);
+
+    leaderboard.push({
+      userId: user.id,
+      userName: user.name || 'Anonymous', // Use user.name or fallback to 'Anonymous'
+      displayName: user.displayName || 'Anonymous', // Use user.displayName or fallback to 'Anonymous'
+      profilePicture: user.photoURL || 'default-profile.png',
+      totalLikes
+    });
+  }
+
+  return leaderboard.sort((a, b) => b.totalLikes - a.totalLikes);
+}
+
+async function displayLeaderboard() {
+  const leaderboardData = await fetchLeaderboardData();
+  const podiumContainer = document.getElementById('podiumContainer');
+  const leaderboardBody = document.getElementById('leaderboardBody');
+
+  if (!podiumContainer) {
+    console.error('Podium container not found!');
+    return;
+  }
+
+  podiumContainer.innerHTML = '';
+  leaderboardBody.innerHTML = '';
+
+  // Display top 3 users on the podium
+  leaderboardData.slice(0, 3).forEach((user, index) => {
+    let podiumClass;
+    switch (index) {
+      case 0: podiumClass = 'gold'; break; // 1st place - center
+      case 1: podiumClass = 'silver'; break; // 2nd place - left
+      case 2: podiumClass = 'bronze'; break; // 3rd place - right
+    }
+
+    // Determine which name to display
+    const displayName = user.userName !== 'Anonymous' ? user.userName : user.displayName;
+
+    const podiumItem = `
+      <div class="podium-item ${podiumClass}">
+        <span class="podium-number">${index + 1}</span>
+        <img src="${user.profilePicture}" alt="${displayName}'s profile picture" class="podium-img">
+        <h3>${displayName}</h3>
+        <p>${user.totalLikes} Likes</p>
+      </div>
+    `;
+    podiumContainer.insertAdjacentHTML('beforeend', podiumItem);
+  });
+
+  // Display other users in the table
+  leaderboardData.slice(3).forEach((user, index) => {
+    // Determine which name to display
+    const displayName = user.userName !== 'Anonymous' ? user.userName : user.displayName;
+
+    const row = `
+      <tr>
+        <td>${index + 4}</td> <!-- Rank starts from 4 for users after the top 3 -->
+        <td>
+          <img src="${user.profilePicture}" alt="${displayName}'s profile picture" class="profile-pic">
+          ${displayName}
+        </td>
+        <td>${user.totalLikes}</td>
+      </tr>
+    `;
+    leaderboardBody.insertAdjacentHTML('beforeend', row);
+  });
+}
+
+// Call displayLeaderboard to show the data on page load
+document.addEventListener('DOMContentLoaded', displayLeaderboard);
 

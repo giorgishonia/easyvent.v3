@@ -8,12 +8,12 @@
 }
 :root{
     /* ===== Colors ===== */
-    --body-color: #E4E9F7;
+    --body-color: white;
     --sidebar-color: #FFF;
     --primary-color: #695CFE;
     --primary-color-light: #F6F5FF;
     --toggle-color: #DDD;
-    --text-color: #707070;
+    --text-color: #000000;
     /* ====== Transition ====== */
     --tran-03: all 0.2s ease;
     --tran-03: all 0.3s ease;
@@ -30,7 +30,7 @@ body{
     color: #fff;
 }
 body.dark{
-    --body-color: #18191a;
+    --body-color: #0e1113;;
     --sidebar-color: #242526;
     --primary-color: #3a3b3c;
     --primary-color-light: #3a3b3c;
@@ -45,11 +45,12 @@ body.dark{
     top: 0;
     left: 0;
     height: 100%;
-    width: 250px;
+    width: 220px;
     padding: 10px 14px;
     background: var(--sidebar-color);
     transition: var(--tran-05);
     padding-bottom: 0;
+    border-right: 1px solid #808080d4;
     z-index: 100;  
 }
 .sidebar.close{
@@ -82,12 +83,12 @@ body.dark{
     color: var(--text-color);
     transition: var(--tran-03);
 }
-.sidebar .text{
-    font-size: 17px;
-    font-weight: 500;
+.sidebar .text {
+    font-size: 14px;
+    font-weight: 100;
     white-space: nowrap;
     opacity: 1;
-}
+  }
 .sidebar.close  .text{
     opacity: 0;
 }
@@ -167,8 +168,8 @@ body.light .sidebar #img{
     background-color: var(--primary-color-light);
     color: var(--text-color);
     border-radius: 6px;
-    font-size: 17px;
-    font-weight: 500;
+    font-size: 15px;
+    font-weight: 100;
     transition: var(--tran-05);
 }
 .sidebar li a{
@@ -203,6 +204,10 @@ body.dark .sidebar li a:hover .text{
 }
 .menu-bar::-webkit-scrollbar{
     display: none;
+}
+
+.mode-text{
+    margin-left: -7px;
 }
 .sidebar .menu-bar .mode{
     border-radius: 6px;
@@ -264,14 +269,15 @@ body.dark .switch::before{
     position: absolute;
     top: 0;
     top: 0;
-    left: 250px;
+    left: 220px;
     height: 100vh;
-    width: calc(100% - 250px);
+    width: calc(100% - 220px);
     background-color: var(--body-color);
     transition: var(--tran-05);
-    padding: 50px;
+    padding: 40px;
     padding-top: 0;
 }
+
 .home .text{
     font-size: 30px;
     font-weight: 500;

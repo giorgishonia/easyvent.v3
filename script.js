@@ -151,11 +151,19 @@ function updateSelectedElementsBackground(theme) {
             icons.forEach((icon) => {
                 icon.style.color = '#FFFFFF'; // Set icon color to white for dark theme
             });
+            const textSpans = element.querySelectorAll('span.text.nav-text');
+            textSpans.forEach((span) => {
+                span.style.color = '#FFFFFF'; // Set text color to white for dark theme
+            });
         } else {
             element.style.backgroundColor = '#695CFE';
             const icons = element.querySelectorAll('i');
             icons.forEach((icon) => {
                 icon.style.color = '#FFFFFF'; // Set icon color to white for light theme
+            });
+            const textSpans = element.querySelectorAll('span.text.nav-text');
+            textSpans.forEach((span) => {
+                span.style.color = '#FFFFFF'; // Set text color to white for light theme
             });
         }
     });

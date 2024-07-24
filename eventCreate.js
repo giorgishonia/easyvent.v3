@@ -18,17 +18,54 @@ const eventDescriptionInput = document.getElementById('eventDescription');
 const eventDateTimeInput = document.getElementById('eventDateTime');
 const eventLocationInput = document.getElementById('eventLocation');
 const eventImageUploadInput = document.getElementById('eventImageUpload');
+const eventCategoryInput = document.getElementById('eventCategory');
 const saveEventButton = document.getElementById('saveEventButton');
 const uploadStatus = document.getElementById('uploadStatus');
 const previewTitle = document.getElementById('previewTitle');
 const previewDescription = document.getElementById('previewDescription');
 const previewDateTime = document.getElementById('previewDateTime');
 const previewLocation = document.getElementById('previewLocation');
+const previewCategory = document.getElementById('previewCategory');
 const previewImage = document.getElementById('previewImage');
 const dragDropContainer = document.getElementById('dragDropContainer');
 const dragDropText = document.getElementById('dragDropText');
+const notification = document.getElementById('notification');
 
 let currentImageUrl = '';
+
+// Category options with icons
+const categories = {
+    'Music': '🎵',
+    'Sports': '⚽',
+    'Technology': '💻',
+    'Art': '🎨',
+    'Education': '📚',
+    'Fun': '🥳',
+    'Gaming': '🎮',
+    'Food': '🍽️',
+    'Movies': '🎬',
+    'Theater': '🎭',
+    'Fashion': '👗',
+    'Health': '💪',
+    'For Kids': '🧒',
+    'For Pets': '🐾',
+    'Charity': '🤲',
+    'Travel': '✈️'
+};
+
+// Function to populate category dropdown
+function populateCategoryDropdown() {
+    eventCategoryInput.innerHTML = ''; // Clear existing options
+
+    for (const [category, icon] of Object.entries(categories)) {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = `${icon} ${category}`;
+        eventCategoryInput.appendChild(option);
+    }
+}
+
+populateCategoryDropdown();
 
 // Event listener for file input change
 eventImageUploadInput.addEventListener('change', (event) => {
@@ -46,14 +83,14 @@ dragDropContainer.addEventListener('dragover', (event) => {
 // Event listener for dragleave
 dragDropContainer.addEventListener('dragleave', () => {
     dragDropContainer.classList.remove('drag-over');
-    dragDropText.textContent = 'Drag and drop an image here or click to upload';
+    dragDropText.textContent = 'Choose a file, or drag it here';
 });
 
 // Event listener for drop
 dragDropContainer.addEventListener('drop', (event) => {
     event.preventDefault();
     dragDropContainer.classList.remove('drag-over');
-    dragDropText.textContent = 'Drag and drop an image here or click to upload';
+    dragDropText.textContent = 'Choose a file, or drag it here';
 
     const file = event.dataTransfer.files[0];
     handleFileUpload(file);
@@ -113,11 +150,9 @@ eventLocationInput.addEventListener('input', () => {
     previewLocation.textContent = eventLocationInput.value;
 });
 
-// Save event to Firestore
-saveEventButton.addEventListener('click', saveEvent);
-
-// Function to save event details
-const notification = document.getElementById('notification');
+eventCategoryInput.addEventListener('change', () => {
+    previewCategory.textContent = eventCategoryInput.options[eventCategoryInput.selectedIndex].text;
+});
 
 // Function to show notification
 function showNotification(message, type) {
@@ -129,49 +164,67 @@ function showNotification(message, type) {
     }, 2000); // 2 seconds
 }
 
-// Save event to Firestore
-saveEventButton.addEventListener('click', saveEvent);
+let isSubmitting = false;
+
+saveEventButton.addEventListener('click', (event) => {
+    if (isSubmitting) return; // Prevent duplicate submissions
+    isSubmitting = true;
+    saveEvent();
+    setTimeout(() => isSubmitting = false, 3000); // Reset after 3 seconds
+});
 
 function saveEvent() {
+    console.log('saveEvent function called');
+
     const eventTitle = eventTitleInput.value.trim();
     const eventDescription = eventDescriptionInput.value.trim();
     const eventDateTime = eventDateTimeInput.value.trim();
     const eventLocation = eventLocationInput.value.trim();
+    const eventCategory = eventCategoryInput.value;
     const eventImageURL = currentImageUrl;
 
-    if (!eventTitle || !eventDescription || !eventDateTime || !eventLocation || !eventImageURL) {
+    if (!eventTitle || !eventDescription || !eventDateTime || !eventLocation || !eventCategory || !eventImageURL) {
         showNotification('Please fill in all fields.', 'error');
+        isSubmitting = false; // Allow future submissions
         return;
     }
 
-    // Fetch current user ID (assuming you have authentication set up)
-    const userId = firebase.auth().currentUser.uid;
+    const userId = firebase.auth().currentUser ? firebase.auth().currentUser.uid : null;
 
-    // Save event data to Firestore
+    if (!userId) {
+        showNotification('User not authenticated. Please log in.', 'error');
+        isSubmitting = false; // Allow future submissions
+        return;
+    }
+
     db.collection('events').add({
         title: eventTitle,
         description: eventDescription,
         dateTime: firebase.firestore.Timestamp.fromDate(new Date(eventDateTime)),
         location: eventLocation,
+        category: eventCategory,
         imageUrl: eventImageURL,
-        voteCount: 0,
-        createdBy: userId // Include the current user's ID as authorId
+        createdBy: userId,
+        createdAt: firebase.firestore.Timestamp.fromDate(new Date()) // Add this line
     })
     .then((docRef) => {
         console.log('Event saved with ID:', docRef.id);
         showNotification('Event posted successfully!', 'success');
-        // Reset form fields after saving
+        // Clear form and preview
         eventTitleInput.value = '';
         eventDescriptionInput.value = '';
         eventDateTimeInput.value = '';
         eventLocationInput.value = '';
+        eventCategoryInput.value = '';
         eventImageUploadInput.value = '';
         uploadStatus.textContent = '';
         previewImage.style.display = 'none';
         currentImageUrl = '';
+        isSubmitting = false; // Allow future submissions
     })
     .catch((error) => {
         console.error('Error adding event:', error);
         showNotification('An error occurred. Please try again later.', 'error');
+        isSubmitting = false; // Allow future submissions
     });
 }

@@ -1,5 +1,11 @@
-/* events.css */
-/* Additional styles for event creation modal */
+/* Google Font Import - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
 .overlay {
     position: fixed;
     top: 0;
@@ -54,29 +60,38 @@
     cursor: pointer;
 }
 
+
 .event-card {
+    background-color: transparent !important;
+    display: flex;
+    overflow: visible;
+    position: relative;
+    width: 100%;
+    height: 100px;
+    padding: 6px;
     border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    width: 300px; /* Adjust width as needed */
-    background-color: white;
+    
   }
   
+  .event-card img{
+    object-fit: cover;
+    object-position: center;
+    width: 150px !important;
+    height: 100%;
+    border-radius: 15px !important;
+  }
+
+.lower-panel{
+  display: flex;
+}
 
 /* Container for all events */
 #eventsContainer {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-}
-
-/* Individual event card styles */
-.event-card {
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    width: 300px; /* Adjust width as needed */
+    margin-top: 30px;
+    gap: 10px;
+    justify-content: start;
 }
 
 .event-image {
@@ -88,18 +103,17 @@
 
 .event-card h3 {
     font-size: 1.5rem;
-    margin: 15px 0;
-    text-align: center;
+    text-align: start;
 }
 
 .event-card p {
-    margin: 0 15px 10px;
     text-align: center;
+    font-weight: 100;
+    font-family: 'Poppins', sans-serif;
 }
 
 .event-card small {
     display: block;
-    margin: 0 15px 15px;
     color: #666;
     text-align: center;
 }
@@ -132,37 +146,107 @@
 .dropdown {
     position: relative;
 }
-
 .dropbtn {
     background-color: transparent;
     border: none;
     cursor: pointer;
     font-size: 1.5rem;
-    color: #888;
+    color: #212121;
+    transform: translateY(-15px);
 }
+
+body.dark .dropbtn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #ffffff;
+  transform: translateY(-15px);
+}
+
+#event-creation-date{
+  color: rgb(35, 35, 35);
+  font-size: 13px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 100;
+  margin-top: 2px;
+}
+
+body.dark #event-creation-date{
+  color: rgb(220, 220, 220);
+  font-size: 13px;
+  margin-top: 2px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 100;
+}
+
+.upper-panel{
+  display: flex;
+  gap: 10px;
+}
+
+.like-count{
+  font-weight: 100;
+  color: rgb(62, 62, 62);
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+svg {
+  overflow: visible;
+}
+
+
+body.dark .like-count{
+  color: rgb(227, 227, 227);
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-weight: 100;
+}
+
+.like-icon {
+  transition: fill 0.3s ease;
+  fill: rgb(87, 87, 87);
+  /* stroke: rgba(0, 0, 0, 0.7 );  */
+}
+
+body.dark .like-icon {
+  transition: fill 0.3s ease;
+  fill: rgb(84, 85, 86); /* Default color */
+  /* stroke: rgba(255, 255, 255, 0.71); */
+}
+
+.like-icon.liked {
+  fill: rgb(255, 0, 0);
+}
+
+body.dark .like-icon.liked {
+  fill: red; /* Color when liked */
+}
+
+
 
 .dropdown-content {
     display: none;
     position: absolute;
     background-color: #fff;
-    min-width: 150px;
+    min-width: 100px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1;
+    transform: translateY(-21px);
     border-radius: 5px;
 }
 
 .dropdown-content button {
     width: 100%;
-    padding: 10px;
     text-align: left;
     background-color: transparent;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    text-align: center;
 }
 
 .dropdown-content button:hover {
-    background-color: #f5f5f5; /* Hover color */
+    background-color: #4c4c4c; /* Hover color */
 }
 
 .drag-and-drop-container{
@@ -216,36 +300,25 @@
     margin-top: 10px;
   }
   
-  .like-button, .interest-button {
+  .like-button{
     padding: 5px 10px;
     cursor: pointer;
     border: none;
     border-radius: 5px;
-    background-color: #007bff;
+    background-color: transparent;
     color: white;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 15px;
   }
-  
-  .like-button:hover, .interest-button:hover {
-    background-color: #0056b3;
+  .like-button svg:hover{
+    filter: brightness(0.8);
   }
-
   .event-actions {
     display: flex;
     gap: 10px;
     margin-top: 10px;
-  }
-  
-  .like-button, .interest-button, .edit-button, .delete-button, .report-button {
-    padding: 5px 10px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-  }
-  
-  .like-button:hover, .interest-button:hover, .edit-button:hover, .delete-button:hover, .report-button:hover {
-    background-color: #0056b3;
   }
   
   .actions-menu {
@@ -327,15 +400,10 @@ textarea {
   color: inherit;
 }
 
-.event-card {
-  position: relative;
-  margin-bottom: 20px;
-}
-
 .dropdown {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 4px;
+  right: 8px;
 }
 
 .dropdown-content {
@@ -343,24 +411,37 @@ textarea {
   position: absolute;
   right: 0;
   background-color: #f9f9f9;
-  min-width: 120px;
+  min-width: 100px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
 }
 
 .dropdown-content button {
   color: black;
-  padding: 12px 16px;
   text-decoration: none;
   display: block;
   width: 100%;
   border: none;
   background: none;
-  text-align: left;
+  text-align: center;
+}
+
+.delete-button{
+  border-radius: 0px;
+}
+
+.edit-button{
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.report-button{
+  border-top-right-radius: 0px;
+  border-top-left-radius: 0px;
 }
 
 .dropdown-content button:hover {
-  background-color: #f1f1f1;
+  background-color: #c3c3c3;
 }
 
 .dropdown:hover .dropdown-content {
@@ -406,22 +487,442 @@ textarea {
   }
 }
 
-/* Dark theme styles */
-.dark-theme .event-card {
-  background-color: #242526;
-  color: white;
-}
-
-
-/* Dark theme styles */
-.dark .event-card {
-  background-color: #242526;
-  color: white;
-}
-
 
 /* Dark theme styles */
 body.dark .event-card {
-  background-color: #242526;
+  background-color: transparent !important;
   color: white;
+  padding: 6px;
+}
+
+body.dark .event-card:hover {
+  background-color: #181C1F !important;
+}
+
+
+
+/* Add styles for category buttons */
+#categoryButtons {
+  margin-bottom: 10px;
+}
+
+.category-button {
+  margin-right: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  height: fit-content;
+  background: linear-gradient(180deg, rgb(105, 92, 254) 0%, rgb(52, 40, 184) 100%);
+  color: white;
+
+}
+
+body.dark .category-button {
+  border-radius: 15px;
+  border: none;
+  color: white;
+  height: fit-content;
+  background: rgb(58, 59, 60);
+  /* background: linear-gradient(180deg, rgb(105, 15, 167) 0%, rgb(59, 0, 91) 100%); */
+}
+
+.category-button:hover {
+  background-color: #ddd;
+}
+
+/* Add similar styles for other categories */
+.selected-category {
+  background-color: #007BFF; /* Change this to your preferred color */
+  color: #fff;
+}
+
+.category-text{
+  background-color: rgb(105, 92, 254);
+  color: white;
+  border-radius: 10px;
+  padding: 5px;
+  width: fit-content;
+  text-align: center;
+  font-size: 12px;
+}
+
+body.dark .category-text{
+  background-color: rgb(58, 59, 60);
+  color: white;
+  border-radius: 10px;
+  padding: 5px;
+  width: fit-content;
+  text-align: center;
+  font-size: 12px;
+}
+
+#edit-indicator {
+  /* Style as needed */
+  display: inline-block;
+  /* For visibility toggle */
+}
+
+.hidden {
+  display: none;
+}
+
+.show {
+  display: inline-block;
+}
+
+
+.carousel-container {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  margin: 20px 0;
+}
+
+.carousel-content {
+  display: flex;
+  height: 60px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carousel-content::-webkit-scrollbar {
+  height: 8px; /* Adjust the height of the scrollbar */
+}
+
+.carousel-content::-webkit-scrollbar-track {
+  background: transparent; /* Remove the scrollbar background */
+}
+
+.carousel-content::-webkit-scrollbar-thumb {
+  background-color: #888; /* Scrollbar color */
+  border-radius: 10px;
+}
+
+.carousel-content::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Hover color */
+}
+
+.carousel-content {
+  -ms-overflow-style: none; /* Hide the scrollbar in IE and Edge */
+  scrollbar-width: thin; /* Make the scrollbar thin in Firefox */
+  scrollbar-color: #695cfe transparent;
+}
+
+body.dark .carousel-content {
+  -ms-overflow-style: none; /* Hide the scrollbar in IE and Edge */
+  scrollbar-width: thin; /* Make the scrollbar thin in Firefox */
+  scrollbar-color: #888 transparent; /* Firefox scrollbar color */
+}
+
+.category-button.selected-category{ 
+  background-color: #007BFF!important;
+  color: #fff!important;
+}
+
+
+.vote-button svg{
+  pointer-events: none;
+}
+
+#event-date{
+  font-family: 'Poppins', sans-serif;
+  font-weight: 100;
+  display: none;
+}
+
+#event-location{
+  display: none;
+}
+
+.event-title{
+  font-weight: normal;
+  font-size: 15px;
+  margin-left: 7px;
+}
+
+.right-panel{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  margin-left: 10px;
+  justify-content: space-evenly;
+}
+
+.event-image{
+  cursor: pointer;
+}
+
+
+.left-panel {
+  overflow: hidden; /* Hide any overflowed parts of the image */
+  position: relative; /* Set relative positioning for the container */
+  border-radius: 15px;
+}
+
+.event-image {
+  width: 100%; /* Make the image fit the container */
+  height: auto; /* Maintain aspect ratio */
+  transition: transform 0.2s ease; /* Smooth transition for zoom effect */
+}
+
+.left-panel:hover .event-image {
+  transform: scale(1.1); /* Zoom in the image */
+}
+
+hr {
+  width: 100%;
+  border: none; /* Remove default border */
+  height: 1px;  /* Set height to a tiny value */
+  background-color: #695cfe31; /* Set a light color for visibility */
+}
+
+body.dark hr {
+  width: 100%;
+  border: none; /* Remove default border */
+  height: 1px;  /* Set height to a tiny value */
+  background-color: #ffffff6f; /* Set a light color for visibility */
+}
+
+.comment-button{
+  display: none;
+}
+
+#vote-container{
+  background-color: gray;
+  border-radius: 10px;
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  width: fit-content;
+  text-align: center;
+  font-size: 14px;
+  border: 1px solid black;
+}
+
+.edit-indicator-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip {
+  visibility: hidden;
+  width: 120px;
+  background-color: #d9d7d7a3;
+  backdrop-filter: blur(2px);
+  color: #000000;
+  text-align: center;
+  border-radius: 5px;
+  padding: 3px;
+  border: none;
+  position: absolute;
+  z-index: 1;
+  font-size: 13px;
+  bottom: 125%; /* Position the tooltip above the indicator */
+  left: 50%;
+  margin-left: -60px; /* Center the tooltip */
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+body.dark .tooltip {
+  visibility: hidden;
+  width: 120px;
+  background-color: #959595a4;
+  backdrop-filter: blur(5px);
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 3px;
+  position: absolute;
+  z-index: 1;
+  font-size: 13px;
+  bottom: 125%; /* Position the tooltip above the indicator */
+  left: 50%;
+  margin-left: -60px; /* Center the tooltip */
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.edit-indicator-container:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* General styles */
+#leaderboard {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 20px;
+}
+
+#leaderboard h2 {
+  margin-bottom: 20px;
+}
+
+/* Podium container styles */
+#podiumContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.podium {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 800px; /* Adjust the width as needed */
+  position: relative;
+}
+
+/* Podium item styles */
+.podium-item {
+  width: 120px;
+  text-align: center;
+  padding: 10px;
+  margin: 0 10px;
+  position: relative;
+}
+
+.podium-item img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+}
+
+.podium-item h3 {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.podium-item p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.podium-item .podium-number {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #333;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th, table td {
+  padding: 10px;
+  color: black;
+  border: 1px solid #ddd;
+}
+
+body.dark table td {
+  color: rgb(255, 255, 255);
+}
+
+body.dark .podium-item h3{
+  color: white;
+}
+
+body.dark .podium-item p{
+  color: white;
+}
+
+td {
+  vertical-align: middle;
+  text-align: left;
+}
+
+.profile-pic {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 8px; /* Adds some space between the image and the text */
+}
+
+td .content-wrapper {
+  display: inline-flex;
+  align-items: center;
+}
+
+
+
+body.dark #leaderboard h2{
+  color: white;
+}
+
+
+
+body.dark table th {
+  color: rgb(255, 255, 255);
+}
+
+
+table th {
+  background-color: #f4f4f400;
+}
+
+table img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.podium-item.gold {
+  order: 2; /* Center item should be on top */
+}
+
+.podium-item.silver {
+  order: 1; /* Left item */
+}
+
+.podium-item.bronze {
+  order: 3; /* Right item */
+}
+
+
+.wrapper{
+  display: flex;
+  gap: 40px;
 }

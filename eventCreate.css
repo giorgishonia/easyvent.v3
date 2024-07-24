@@ -97,6 +97,7 @@
   body.dark .event-details{
     background-color: #242526;
     color: white;
+    width: min-content;
 }
 
 body.dark .event-preview{
@@ -141,4 +142,38 @@ body.dark .event-preview{
     to {
         opacity: 0;
     }
+}
+
+#preview {
+  margin-top: 20px;
+}
+
+#preview img {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+
+.event-creation-container {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+
+.event-details{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min-content;
+  justify-content: center;
+}
+
+.event-preview img {
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+
+#dragDropContainer{
+  width: 100%;
 }

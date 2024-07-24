@@ -29,13 +29,15 @@
 .comment {
     background: #f1f1f1;
     padding: 10px;
+    position: relative;
+    display: flex;
     border-radius: 5px;
     margin-bottom: 10px;
 }
 
 .comment img {
-    width: 30px;
-    height: 30px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
 }
 
@@ -44,5 +46,40 @@
 }
 
 .comment-text {
-    margin-left: 40px;
+    font-size: 15px;
+    color: rgb(67, 67, 67);
+    font-weight: 200;
+}
+
+
+.comment button{
+
+    position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.author-info{
+    display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+
+}
+
+.author-name{
+    font-weight: 600;
+    font-size: 16px;
+
+}
+
+.report-comment{
+    margin-top: 48px;
+}
+
+.delete-comment{
+    margin-top: 24px;
+}
+
+.delete-comment, .edit-comment, .report-comment{
+    width: 100%;
 }

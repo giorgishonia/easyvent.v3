@@ -10,7 +10,6 @@
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
     <title>Events | EasyVent</title>
     <style>
-        /* Additional styles for event creation modal */
         .overlay {
             position: fixed;
             top: 0;
@@ -63,14 +62,6 @@
             right: 10px;
             font-size: 20px;
             cursor: pointer;
-        }
-
-        /* Styles for events display */
-        .event-card {
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 10px;
-            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -164,14 +155,74 @@
     <section class="home">
         <div class="text">Events</div>
         <button style="display: none;" id="createEventButton">Create Event</button>
-        <div id="eventsContainer"></div>
-    </section>
+        
+        <div id="category-carousel" class="carousel-container">
+            <div id="category-buttons" class="carousel-content">
+                <button id="music-button" class="category-button" data-category="Music">🎵 Music</button>
+                <button id="sports-button" class="category-button" data-category="Sports">⚽ Sports</button>
+                <button id="technology-button" class="category-button" data-category="Technology">💻 Technology</button>
+                <button id="art-button" class="category-button" data-category="Art">🎨 Art</button>
+                <button id="education-button" class="category-button" data-category="Education">📚 Education</button>
+                <button id="fun-button" class="category-button" data-category="Fun">🥳 Fun</button>
+                <button id="gaming-button" class="category-button" data-category="Gaming">🎮 Gaming</button>
+                <button id="food-button" class="category-button" data-category="Food">🍽️ Food</button>
+                <button id="movies-button" class="category-button" data-category="Movies">🎬 Movies</button>
+                <button id="theater-button" class="category-button" data-category="Theater">🎭 Theater</button>
+                <button id="fashion-button" class="category-button" data-category="Fashion">👗 Fashion</button>
+                <button id="health-button" class="category-button" data-category="Health">💪 Health</button>
+                <button id="kids-button" class="category-button" data-category="For Kids">🧒 For Kids</button>
+                <button id="pets-button" class="category-button" data-category="For Pets">🐾 For Pets</button>
+                <button id="charity-button" class="category-button" data-category="Charity">🤲 Charity</button>
+                <button id="travel-button" class="category-button" data-category="Travel">✈️ Travel</button>
+            </div>
+        </div>
+        
 
+        <div class="wrapper">
+            <div id="eventsContainer"></div>
+            <div id="leaderboard">
+                <h2>Leaderboard</h2>
+                <div id="podiumContainer">
+                  <div class="podium">
+                    <div class="podium-item silver">
+                      <span class="podium-number">2</span>
+                      <img src="path-to-silver-user-image" alt="2nd place user" class="podium-img">
+                      <h3>Second Place</h3>
+                      <p>Likes</p>
+                    </div>
+                    <div class="podium-item gold">
+                      <span class="podium-number">1</span>
+                      <img src="path-to-gold-user-image" alt="1st place user" class="podium-img">
+                      <h3>First Place</h3>
+                      <p>Likes</p>
+                    </div>
+                    <div class="podium-item bronze">
+                      <span class="podium-number">3</span>
+                      <img src="path-to-bronze-user-image" alt="3rd place user" class="podium-img">
+                      <h3>Third Place</h3>
+                      <p>Likes</p>
+                    </div>
+                  </div>
+                </div>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>User</th>
+                      <th>Total Likes</th>
+                    </tr>
+                  </thead>
+                  <tbody id="leaderboardBody"></tbody>
+                </table>
+              </div>
+              
+
+    </section>
 
     <div class="overlay" id="eventModal">
         <div class="event-modal">
             <span class="close-btn" id="closeModal">&times;</span>
-            <h2 id="modalTitle">Create/Edit Event</h2>
+            <h2 id="modalTitle">Edit Event</h2>
             <input type="text" id="eventTitle" placeholder="Event Title">
             <textarea id="eventDescription" rows="4" placeholder="Event Description"></textarea>
             <input type="date" id="eventDateTime">
@@ -179,10 +230,10 @@
             <div id="dragDropContainer" class="drag-and-drop-container">
                 <p id="dragDropText">Choose a file, or drag it here</p>
                 <input type="file" id="eventImageUpload" accept="image/*" style="display: none;">
-                <img id="uploadImg" src="./images/placeholder-image.png" alt="">
+                <img id="uploadImg" src="/images/free-download-1767976-1502312.png" alt="">
             </div>
             <p id="uploadStatus"></p>
-            <button id="saveEventButton">Save Event</button>
+            <button id="saveEventButton">Save</button>
             <input type="hidden" id="eventId" value="">
         </div>
     </div>
@@ -190,7 +241,6 @@
 
 
     <div class="dropdown-content" id="dropdown-${eventId}">
-        <!-- The buttons will be dynamically added/removed in JavaScript -->
       </div>
       
 

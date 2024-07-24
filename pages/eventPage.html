@@ -5,11 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Details</title>
     <link rel="stylesheet" href="eventpage.css">
+    <link rel="stylesheet" href="/sidebar.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+
 </head>
 <body>
     <header>
         <h1>Event Details</h1>
     </header>
+    <nav class="sidebar close">
+        <header>
+            <div class="image-text">
+                <span class="image">
+                    <img id="img" src="/images/logo.png" alt="easyvent logo">
+                </span>
+                <div class="text logo-text">
+                    <span class="name">EasyVent</span>
+                    <span class="profession">Explore & Connect</span>
+                </div>
+            </div>
+            <i class='bx bx-chevron-right toggle'></i>
+        </header>
+        <div class="menu-bar">
+            <div class="menu">
+                <li class="nav-link">
+                    <a href="/eventCreate.html">
+                        <i class='bx bx-plus-circle icon'></i>
+                        <span class="text nav-text">Create Post</span>
+                    </a>
+                </li>
+                <li class="search-box">
+                    <i class='bx bx-search icon'></i>
+                    <input type="text" placeholder="Search...">
+                </li>
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="/index.html">
+                            <i class='bx bx-home-alt icon'></i>
+                            <span class="text nav-text">Home</span>
+                        </a>
+                    </li>
+                    <li style="background-color: #3a3b3c; border-radius: 6px;" class="nav-link selected">
+                        <a href="./events.html">
+                            <i class='bx bx-party icon'></i>
+                            <span class="text nav-text">Events</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="./tournaments.html">
+                            <i class='bx bx-trophy icon'></i>
+                            <span class="text nav-text">Tournaments</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="./calendar.html">
+                            <i class='bx bx-calendar icon'></i>
+                            <span class="text nav-text">Calendar</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="./gallery.html">
+                            <i class='bx bx-image icon'></i>
+                            <span class="text nav-text">Gallery</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="bottom-content">
+                <li class="nav-link" id="loginButton">
+                    <a href="#">
+                        <i class='bx bx-log-in icon'></i>
+                        <span class="text nav-text">Login</span>
+                    </a>
+                </li>
+                <li class="mode">
+                    <div class="sun-moon">
+                        <i class='bx bx-moon icon moon'></i>
+                        <i class='bx bx-sun icon sun'></i>
+                    </div>
+                    <span class="mode-text text">Dark mode</span>
+                    <div class="toggle-switch">
+                        <span class="switch"></span>
+                    </div>
+                </li>
+                <div id="user-info">
+                    <img src="/images/profile-picture.jpg" id="userImg">
+                    <div class="user-details">
+                        <div id="userName"></div>
+                        <div id="userEmail"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
     <main>
         <section class="event-details">
             <div class="event-image-container">
@@ -20,11 +108,26 @@
                 <p id="eventDescription"></p>
                 <p id="eventDate"></p>
                 <p id="eventLocation"></p>
-                <p id="eventMaxCapacity"></p>
                 <p id="eventAuthor"></p>
-                <button id="likeButton">Like</button>
-                <button id="interestButton">Interested</button>
+                <div id="like-container" class="like-container">
+                    <button id="likeButton">
+                        <i id="likeIcon" class='bx bx-like'></i>
+                    </button>
+                    <p id="likeCount">Likes: 0</p>
+                </div>
                 <a href="#" id="backButton">&larr; Back to Events</a>
+                
+                <!-- Comments Section -->
+                <div class="comments-section">
+                    <!-- Comment Form -->
+                    <form class="comment-form">
+                        <input type="text" class="comment-input" placeholder="Write a comment..." required />
+                        <button type="submit" class="comment-button">Post</button>
+                    </form>
+                    
+                    <!-- Comments Container -->
+                    <div class="comments-container"></div>
+                </div>
             </div>
         </section>
     </main>
@@ -32,49 +135,33 @@
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
+    <script src="/script.js"></script>
     <script>
-
-const firebaseConfig = {
-    apiKey: "AIzaSyB5Cb1X6xrpKTullZZDV1S8A700uIzm3Ws",
-    authDomain: "easyvent-85031.firebaseapp.com",
-    projectId: "easyvent-85031",
-    storageBucket: "easyvent-85031.appspot.com",
-    messagingSenderId: "496483041148",
-    appId: "1:496483041148:web:e7410ac120211c05232ef9",
-    measurementId: "G-XMEKKNRMG7"
-};
-
-// Initialize Firebase
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-
-const firestore = firebase.firestore();
-
-document.addEventListener('DOMContentLoaded', () => {
+ document.addEventListener('DOMContentLoaded', () => {
     const eventId = getEventIdFromUrl(); // Function to get event ID from URL
     if (!eventId) {
         console.error('Event ID not found in URL.');
         return;
     }
+    const firestore = firebase.firestore();
 
     // Elements
     const eventImageElement = document.getElementById('eventImage');
-    const eventTitleElement = document.getElementById('eventTitle');
-    const eventDescriptionElement = document.getElementById('eventDescription');
-    const eventDateElement = document.getElementById('eventDate');
-    const eventLocationElement = document.getElementById('eventLocation');
-    const eventMaxCapacityElement = document.getElementById('eventMaxCapacity');
-    const eventAuthorElement = document.getElementById('eventAuthor');
-    const likeButton = document.getElementById('likeButton');
-    const interestButton = document.getElementById('interestButton');
-    const backButton = document.getElementById('backButton');
+            const eventTitleElement = document.getElementById('eventTitle');
+            const eventDescriptionElement = document.getElementById('eventDescription');
+            const eventDateElement = document.getElementById('eventDate');
+            const eventLocationElement = document.getElementById('eventLocation');
+            const eventAuthorElement = document.getElementById('eventAuthor');
+            const likeButton = document.getElementById('likeButton');
+            const likeIcon = document.getElementById('likeIcon');
+            const likeCountElement = document.getElementById('likeCount');
+            const backButton = document.getElementById('backButton');
+            const commentForm = document.querySelector('.comment-form');
+            const commentsContainer = document.querySelector('.comments-container');
 
-    // Fetch event details from Firestore
-    firestore.collection('events').doc(eventId).get().then(doc => {
+    firestore.collection('events').doc(eventId).onSnapshot(doc => {
         if (doc.exists) {
             const event = doc.data();
-
             // Update HTML with event details
             eventImageElement.src = event.imageUrl || '/images/default-event-image.jpg';
             eventTitleElement.textContent = event.title || 'Event Title';
@@ -82,16 +169,34 @@ document.addEventListener('DOMContentLoaded', () => {
             const eventDateObj = new Date(event.date);
             eventDateElement.textContent = eventDateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) || 'Event Date';
             eventLocationElement.innerHTML = `Location: <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}" target="_blank">${event.location || 'Event Location'}</a>`;
-            eventMaxCapacityElement.textContent = event.maxCapacity ? `Max Capacity: ${event.maxCapacity}` : 'Not Limited';
             eventAuthorElement.innerHTML = `Author: <a href="./profile.html?uid=${event.authorUid}">${event.author || 'Event Author'}</a>`;
 
-            // Event listeners for like and interest buttons
-            likeButton.addEventListener('click', () => {
-                likeEvent(eventId);
-            });
 
-            interestButton.addEventListener('click', () => {
-                showInterest(eventId);
+               // Update like count and icon
+               const likeCount = event.likeCount || 0;
+                    likeCountElement.textContent = `Likes: ${likeCount}`;
+                    const userId = firebase.auth().currentUser?.uid;
+                    if (userId && event.userLikes && event.userLikes[userId]) {
+                        likeIcon.classList.add('liked');
+                    } else {
+                        likeIcon.classList.remove('liked');
+                    }
+
+                    // Event listener for like button
+                    likeButton.addEventListener('click', () => {
+                        handleLikeEvent(eventId);
+                    });
+
+
+            // Display comments
+            displayComments(event.comments);
+
+            // Event listener for comment form
+            commentForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const commentInput = commentForm.querySelector('.comment-input');
+                postComment(eventId, commentInput.value);
+                commentInput.value = '';
             });
 
             // Back button to navigate to previous page
@@ -102,72 +207,363 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             console.error('Event not found in database.');
         }
-    }).catch(error => {
+    }, error => {
         console.error('Error fetching event:', error);
     });
+
+    function handleLikeEvent(eventId) {
+                const userId = firebase.auth().currentUser.uid;
+
+                if (!userId) {
+                    console.error('User is not authenticated.');
+                    return;
+                }
+
+                const eventRef = firestore.collection('events').doc(eventId);
+
+                eventRef.get().then(doc => {
+                    if (!doc.exists) {
+                        throw "Event does not exist!";
+                    }
+
+                    const eventData = doc.data();
+                    const userLikes = eventData.userLikes || {};
+                    const likeCount = eventData.likeCount || 0;
+
+                    // Determine new like count and update the userLikes
+                    let newLikeCount;
+                    if (userLikes[userId]) {
+                        delete userLikes[userId];
+                        newLikeCount = likeCount - 1;
+                    } else {
+                        userLikes[userId] = true;
+                        newLikeCount = likeCount + 1;
+                    }
+
+                    // Update the UI immediately
+                    const likeCountElement = document.querySelector(`#like-container .like-count`);
+                    const likeIcon = document.querySelector(`#like-icon`);
+
+                    if (likeCountElement) {
+                        likeCountElement.innerText = newLikeCount;
+                    }
+
+                    if (likeIcon) {
+                        if (userLikes[userId]) {
+                            likeIcon.classList.add('liked');
+                        } else {
+                            likeIcon.classList.remove('liked');
+                        }
+                    }
+
+                    // Send the server update request in the background
+                    return eventRef.update({
+                        likeCount: newLikeCount,
+                        userLikes: userLikes
+                    });
+                }).catch(error => {
+                    console.error('Error updating like:', error);
+                });
+            }
+
+    // Function to handle voting
+    function updateVote(eventId, voteType) {
+        const user = firebase.auth().currentUser;
+        if (!user) {
+            console.log('User is not logged in.');
+            return;
+        }
+
+        const eventRef = firestore.collection('events').doc(eventId);
+        eventRef.get().then(doc => {
+            if (doc.exists) {
+                const event = doc.data();
+                const userVotes = event.userVotes || {};
+                const voteCount = event.voteCount || 0;
+
+                let newVoteCount = voteCount;
+
+                if (voteType === 'upvote') {
+                    if (userVotes[user.uid] === 'upvote') {
+                        newVoteCount -= 1; // Cancel upvote
+                        delete userVotes[user.uid];
+                    } else {
+                        if (userVotes[user.uid] === 'downvote') {
+                            newVoteCount += 2; // Remove downvote and add upvote
+                        } else {
+                            newVoteCount += 1; // New upvote
+                        }
+                        userVotes[user.uid] = 'upvote';
+                    }
+                } else if (voteType === 'downvote') {
+                    if (userVotes[user.uid] === 'downvote') {
+                        newVoteCount += 1; // Cancel downvote
+                        delete userVotes[user.uid];
+                    } else {
+                        if (userVotes[user.uid] === 'upvote') {
+                            newVoteCount -= 2; // Remove upvote and add downvote
+                        } else {
+                            newVoteCount -= 1; // New downvote
+                        }
+                        userVotes[user.uid] = 'downvote';
+                    }
+                }
+
+                return eventRef.update({
+                    voteCount: newVoteCount,
+                    userVotes: userVotes
+                }).then(() => newVoteCount);
+            } else {
+                console.error("Event not found!");
+            }
+        }).then(voteCount => {
+            document.getElementById('voteCount').textContent = `Votes: ${voteCount}`;
+        }).catch(error => {
+            console.error("Error updating vote:", error);
+        });
+    }
+
+    // Function to handle showing interest in an event
+    function showInterest(eventId) {
+        const user = firebase.auth().currentUser;
+        if (!user) {
+            console.log('User is not logged in.');
+            return;
+        }
+
+        const eventRef = firestore.collection('events').doc(eventId);
+
+        eventRef.get().then(doc => {
+            if (doc.exists) {
+                const event = doc.data();
+                const interested = event.interested || {};
+
+                if (interested[user.uid]) {
+                    delete interested[user.uid]; // Unmark interest
+                } else {
+                    interested[user.uid] = true; // Mark interest
+                }
+
+                eventRef.update({ interested });
+            }
+        }).catch(error => {
+            console.error("Error showing interest in event:", error);
+        });
+    }
+
+    function postComment(eventId, commentText) {
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        console.log('User is not logged in.');
+        return;
+    }
+
+    if (!commentText.trim()) {
+        console.log('Comment text is empty.');
+        return;
+    }
+
+    const comment = {
+        text: commentText,
+        authorName: user.displayName,
+        authorUid: user.uid,
+        authorImage: user.photoURL || './images/profile-picture.jpg',
+    };
+
+    const eventRef = firestore.collection('events').doc(eventId);
+
+    // Fetch the current comments
+    eventRef.get().then(doc => {
+        if (doc.exists) {
+            const event = doc.data();
+            const comments = event.comments || [];
+
+            // Add the new comment to the array
+            comments.push(comment);
+
+            // Update the Firestore document with the new comments array
+            return eventRef.update({ comments });
+        } else {
+            console.error('Event not found.');
+        }
+    }).then(() => {
+        console.log('Comment posted successfully.');
+    }).catch(error => {
+        console.error('Error posting comment:', error);
+    });
+}
+
+
+    // Function to handle editing a comment
+    function editComment(eventId, oldCommentText, newCommentText) {
+        const user = firebase.auth().currentUser;
+        if (!user) {
+            console.log('User is not logged in.');
+            return;
+        }
+
+        const eventRef = firestore.collection('events').doc(eventId);
+        eventRef.get().then((doc) => {
+            if (doc.exists) {
+                const event = doc.data();
+                const updatedComments = event.comments.map(comment => {
+                    if (comment.text === oldCommentText && comment.authorUid === user.uid) {
+                        comment.text = newCommentText;
+                    }
+                    return comment;
+                });
+
+                return eventRef.update({ comments: updatedComments });
+            }
+        }).catch((error) => {
+            console.error("Error updating comment:", error);
+        });
+    }
+
+    // Function to handle deleting a comment
+    function deleteComment(eventId, commentText) {
+        const user = firebase.auth().currentUser;
+        if (!user) {
+            console.log('User is not logged in.');
+            return;
+        }
+
+        const eventRef = firestore.collection('events').doc(eventId);
+        eventRef.get().then((doc) => {
+            if (doc.exists) {
+                const event = doc.data();
+                const updatedComments = event.comments.filter(comment => !(comment.text === commentText && comment.authorUid === user.uid));
+
+                return eventRef.update({ comments: updatedComments });
+            }
+        }).catch((error) => {
+            console.error("Error deleting comment:", error);
+        });
+    }
+    function displayComments(comments = []) {
+    commentsContainer.innerHTML = ''; // Clear existing comments
+
+    if (comments.length > 0) {
+        comments.forEach(comment => {
+            const commentElement = document.createElement('div');
+            commentElement.classList.add('comment');
+
+            const authorImage = document.createElement('img');
+            authorImage.classList.add('author-image');
+            authorImage.src = comment.authorImage || 'https://lh3.googleusercontent.com/a/ACg8ocLtzqCYWvoJG_tOxlxyNN45_YfqvdxIXgnR1dUzQC1UAZSnvNQg=s96-c';
+            authorImage.onclick = function() {
+                window.location.href = `/profile.html?uid=${comment.authorUid}`;
+            };
+
+            const authorInfo = document.createElement('div');
+            authorInfo.classList.add('author-info');
+
+            const authorName = document.createElement('span');
+            authorName.classList.add('author-name');
+            authorName.textContent = comment.authorName;
+            authorName.onclick = function() {
+                window.location.href = `/profile.html?uid=${comment.authorUid}`;
+            };
+
+            const commentText = document.createElement('span');
+            commentText.classList.add('comment-text');
+            commentText.textContent = comment.text || 'No comment text';
+
+            const tripleDotButton = document.createElement('button');
+            tripleDotButton.innerHTML = '⋮'; // Unicode character for triple dot symbol
+
+            tripleDotButton.addEventListener('click', () => {
+                const dropdownMenu = commentElement.querySelector('.dropdown-menu');
+
+                if (dropdownMenu.style.display === 'block') {
+                    dropdownMenu.style.display = 'none';
+                } else {
+                    dropdownMenu.style.display = 'block';
+                    // Position the dropdown menu above the triple dot button
+                    dropdownMenu.style.top = `${tripleDotButton.offsetTop - dropdownMenu.clientHeight}px`;
+                    dropdownMenu.style.left = `${tripleDotButton.offsetLeft}px`;
+                }
+            });
+
+            const dropdownMenu = document.createElement('div');
+            dropdownMenu.classList.add('dropdown-menu');
+            dropdownMenu.style.display = 'none';
+
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+            editButton.classList.add('edit-comment');
+            editButton.addEventListener('click', () => {
+                const newComment = prompt('Edit your comment:', comment.text);
+                if (newComment) {
+                    editComment(eventId, comment.text, newComment); // Use eventId directly
+                }
+            });
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.classList.add('delete-comment');
+            deleteButton.addEventListener('click', () => {
+                if (confirm("Are you sure you want to delete this comment?")) {
+                    deleteComment(eventId, comment.text); // Use eventId directly
+                }
+            });
+
+            const reportButton = document.createElement('button');
+            reportButton.textContent = 'Report';
+            reportButton.classList.add('report-comment');
+            reportButton.addEventListener('click', () => {
+                const reportForm = document.createElement('div');
+                reportForm.classList.add('report-form');
+                reportForm.innerHTML = `
+                    <input type="text" id="reportReason" placeholder="Enter reason for report..." required />
+                    <button id="sendReport">Send</button>
+                `;
+
+                const sendReportButton = reportForm.querySelector('#sendReport');
+                sendReportButton.addEventListener('click', () => {
+                    const reportReason = reportForm.querySelector('#reportReason').value;
+                    sendReport(eventId, comment.text, reportReason, comment.authorUid, comment.authorName);
+                    reportForm.remove();
+                });
+
+                document.body.appendChild(reportForm);
+            });
+
+            dropdownMenu.appendChild(editButton);
+            dropdownMenu.appendChild(deleteButton);
+            dropdownMenu.appendChild(reportButton);
+
+            authorInfo.appendChild(authorName);
+            authorInfo.appendChild(commentText);
+            commentElement.appendChild(authorImage);
+            commentElement.appendChild(authorInfo);
+            commentElement.appendChild(tripleDotButton);
+            commentElement.appendChild(dropdownMenu);
+
+            commentsContainer.appendChild(commentElement);
+        });
+    }
+
+    // Display the number of comments
+    const commentsCount = document.createElement('p');
+    commentsCount.classList.add('comments-count');
+    commentsCount.textContent = `Comments: ${comments.length}`;
+    commentsContainer.appendChild(commentsCount);
+}
+
+
+
+    // Function to send a report (implement as needed)
+    function sendReport(eventId, commentText, reportReason, authorUid, authorName) {
+        console.log('Report sent:', { eventId, commentText, reportReason, authorUid, authorName });
+    }
+
+    // Function to extract event ID from URL query parameters
+    function getEventIdFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('eventId');
+    }
 });
-
-// Function to handle liking an event
-function likeEvent(eventId) {
-    const user = firebase.auth().currentUser;
-    if (!user) {
-        console.log('User is not logged in.');
-        return;
-    }
-
-    const eventRef = firestore.collection('events').doc(eventId);
-
-    eventRef.get().then(doc => {
-        if (doc.exists) {
-            const event = doc.data();
-            const likes = event.likes || {};
-
-            if (likes[user.uid]) {
-                delete likes[user.uid]; // Unlike
-            } else {
-                likes[user.uid] = true; // Like
-            }
-
-            eventRef.update({ likes });
-        }
-    }).catch(error => {
-        console.error("Error liking event:", error);
-    });
-}
-
-// Function to handle showing interest in an event
-function showInterest(eventId) {
-    const user = firebase.auth().currentUser;
-    if (!user) {
-        console.log('User is not logged in.');
-        return;
-    }
-
-    const eventRef = firestore.collection('events').doc(eventId);
-
-    eventRef.get().then(doc => {
-        if (doc.exists) {
-            const event = doc.data();
-            const interested = event.interested || {};
-
-            if (interested[user.uid]) {
-                delete interested[user.uid]; // Unmark interest
-            } else {
-                interested[user.uid] = true; // Mark interest
-            }
-
-            eventRef.update({ interested });
-        }
-    }).catch(error => {
-        console.error("Error showing interest in event:", error);
-    });
-}
-
-// Function to extract event ID from URL query parameters
-function getEventIdFromUrl() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('eventId');
-}
 
     </script>
 </body>
