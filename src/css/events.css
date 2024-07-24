@@ -6,6 +6,8 @@
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
+
+
 .overlay {
     position: fixed;
     top: 0;
@@ -92,6 +94,11 @@
     margin-top: 30px;
     gap: 10px;
     justify-content: start;
+    width: 49%;
+}
+
+body.dark .sidebar{
+  box-shadow: 5px 0px 15px #000;
 }
 
 .event-image {
@@ -811,9 +818,21 @@ body.dark .tooltip {
   font-size: 16px;
 }
 
+.profile-container{
+  display: flex;
+  gap: 10px;
+}
+
+#category-carousel{
+  width: 50%;
+}
+
 .podium-item p {
   margin: 0;
   font-size: 14px;
+  position: absolute;
+  bottom: 0;
+  left: 30%;
 }
 
 .podium-item .podium-number {
@@ -926,3 +945,14 @@ table img {
   display: flex;
   gap: 40px;
 }
+
+.podium-item.gold img{
+  border: 3px solid #d8ba17;
+}
+.podium-item.silver img{
+  border: 3px solid #a7a7a7;
+}
+.podium-item.bronze img{
+  border: 3px solid #CD7F32;
+}
+

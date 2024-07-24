@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!----======== CSS ======== -->
-    <link rel="stylesheet" href="/sidebar.css">
+    <link rel="stylesheet" href="/src/css/sidebar.css">
+    <link rel="stylesheet" href="/src/css/profile.css">
 
     <!----===== Boxicons CSS ===== -->
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
@@ -32,37 +33,43 @@
         </header>
         <div class="menu-bar">
             <div class="menu">
+                <li class="nav-link">
+                    <a href="/src/html/eventCreate.html">
+                        <i class='bx bx-plus-circle icon'></i>
+                        <span class="text nav-text">Create Post</span>
+                    </a>
+                </li>
                 <li class="search-box">
                     <i class='bx bx-search icon'></i>
                     <input type="text" placeholder="Search...">
                 </li>
                 <ul class="menu-links">
                     <li class="nav-link">
-                        <a href="/index.html">
+                        <a href="/src/html/index.html">
                             <i class='bx bx-home-alt icon'></i>
                             <span class="text nav-text">Home</span>
                         </a>
                     </li>
                     <li class="nav-link">
-                        <a href="./events.html">
+                        <a href="/src/html/events.html">
                             <i class='bx bx-party icon'></i>
                             <span class="text nav-text">Events</span>
                         </a>
                     </li>
-                    <li style="background-color: #3a3b3c; border-radius: 6px;" class="nav-link selected">
-                        <a href="./tournaments.html">
+                    <li class="nav-link">
+                        <a href="/src/html/tournaments.html">
                             <i class='bx bx-trophy icon'></i>
                             <span class="text nav-text">Tournaments</span>
                         </a>
                     </li>
                     <li class="nav-link">
-                        <a href="./calendar.html">
+                        <a href="/src/html/calendar.html">
                             <i class='bx bx-calendar icon'></i>
                             <span class="text nav-text">Calendar</span>
                         </a>
                     </li>
                     <li class="nav-link">
-                        <a href="./gallery.html">
+                        <a href="/src/html/html pages/">
                             <i class='bx bx-image icon'></i>
                             <span class="text nav-text">Gallery</span>
                         </a>
@@ -97,7 +104,38 @@
         </div>
     </nav>
     <section class="home">
-        <div class="text">Dashboard Sidebar</div>
+        <div id="profileContainer">
+            <div id="profileBanner" class="profile-banner-wrapper">
+                <img src="/images/1352190.png" alt="Profile Banner" id="profileBannerImg">
+                <button id="editBannerButton" class="edit-button"><i class='bx bx-edit'></i> Edit</button>
+                <input type="file" id="bannerInput" accept="image/*" style="display: none;">
+            </div>
+            
+            <!-- Profile Picture Wrapper -->
+            <div id="profilePicture" class="profile-picture-wrapper">
+                <img src="/images/profile-picture.jpg" alt="Profile Picture" id="profilePictureImg">
+                <button id="editProfilePictureButton" class="edit-button"><i class='bx bx-edit'></i> Edit</button>
+                <input type="file" id="profilePictureInput" accept="image/*" style="display: none;">
+            </div>
+            <h1 id="userNameProfile">John Doe</h1>
+            <p id="userEmailProfile">john.doe@example.com</p>
+        <!-- Inside the profile section or wherever appropriate -->
+<button id="followToggleButton" class="follow-button">Follow</button>
+
+            <h2>Posted Events</h2>
+            <ul id="userEventsList"></ul>
+        
+            <h2>Followers</h2>
+            <ul id="followersList"></ul>
+        
+            <h2>Followed</h2>
+            <ul id="followedList"></ul>
+        </div>
+        
+        <!-- Hidden file inputs for uploading new images -->
+        <input type="file" id="bannerInput" accept="image/*" style="display: none;">
+        <input type="file" id="profilePictureInput" accept="image/*" style="display: none;">
+        
     </section>
     <button id="loginButton">Login with Google</button>
 </body>
@@ -107,5 +145,6 @@
 <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-storage.js"></script>
-<script src="/script.js"></script>
+<script src="/src/js/profile.js"></script>
+<script src="/src/js/script.js"></script>
 </html>

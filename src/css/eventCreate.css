@@ -177,3 +177,127 @@ body.dark .event-preview{
 #dragDropContainer{
   width: 100%;
 }
+
+body {
+  background-color: #fff;
+  color: #000;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.event-details {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark .event-details {
+  background-color: #1e1e1e;
+}
+
+.event-details h2 {
+  text-align: center;
+  color: inherit;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.event-details input,
+.event-details textarea,
+.event-details select {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 10px auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: block;
+  font-size: 16px;
+  background-color: #fff;
+  color: #000;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark .event-details input,
+body.dark .event-details textarea,
+body.dark .event-details select {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+.event-details label {
+  margin: 10px 0;
+  display: block;
+  font-weight: bold;
+  color: inherit;
+}
+
+.event-details button {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 20px auto 0;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  font-size: 16px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark .event-details button {
+  background-color: #0056b3;
+}
+
+.drag-and-drop-container {
+  margin: 20px auto;
+  padding: 20px;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  text-align: center;
+  background-color: #fff;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+body.dark .drag-and-drop-container {
+  background-color: #333;
+  border-color: #555;
+}
+
+#dragDropText {
+  margin: 0;
+  color: #888;
+}
+
+body.dark #dragDropText {
+  color: #aaa;
+}
+
+#uploadImg {
+  max-width: 100%;
+  height: 50px;
+  display: block;
+  margin: 10px auto;
+}
+
+#uploadStatus {
+  color: #888;
+  font-size: 14px;
+}
+
+body.dark #uploadStatus {
+  color: #aaa;
+}
+
+body{
+  height: 100%;
+}

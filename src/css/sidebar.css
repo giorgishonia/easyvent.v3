@@ -50,8 +50,8 @@ body.dark{
     background: var(--sidebar-color);
     transition: var(--tran-05);
     padding-bottom: 0;
-    border-right: 1px solid #808080d4;
     z-index: 100;  
+    box-shadow: 5px 0px 15px #00000038;
 }
 .sidebar.close{
     width: 88px;

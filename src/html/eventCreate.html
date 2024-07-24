@@ -8,8 +8,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <!----======== CSS ======== -->
-        <link rel="stylesheet" href="sidebar.css">
-        <link rel="stylesheet" href="eventCreate.css">
+        <link rel="stylesheet" href="/src/css/sidebar.css">
+        <link rel="stylesheet" href="/src/css/eventCreate.css">
 
         <!----===== Boxicons CSS ===== -->
         <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
@@ -22,7 +22,7 @@
             <header>
                 <div class="image-text">
                     <span class="image">
-                        <img id="img" src="./images/logo.png" alt="easyvent logo">
+                        <img id="img" src="/images/logo.png" alt="easyvent logo">
                     </span>
                     <div class="text logo-text">
                         <span class="name">EasyVent</span>
@@ -33,8 +33,8 @@
             </header>
             <div class="menu-bar">
                 <div class="menu">
-                    <li style="background-color: #3a3b3c; border-radius: 6px;" class="nav-link selected">
-                        <a href="/eventCreate.html">
+                    <li class="nav-link">
+                        <a href="/src/html/eventCreate.html">
                             <i class='bx bx-plus-circle icon'></i>
                             <span class="text nav-text">Create Post</span>
                         </a>
@@ -43,33 +43,33 @@
                         <i class='bx bx-search icon'></i>
                         <input type="text" placeholder="Search...">
                     </li>
-                    <ul  class="menu-links">
+                    <ul class="menu-links">
                         <li class="nav-link">
-                            <a href="./index.html">
+                            <a href="/src/html/index.html">
                                 <i class='bx bx-home-alt icon'></i>
                                 <span class="text nav-text">Home</span>
                             </a>
                         </li>
                         <li class="nav-link">
-                            <a href="./pages/events.html">
+                            <a href="/src/html/events.html">
                                 <i class='bx bx-party icon'></i>
                                 <span class="text nav-text">Events</span>
                             </a>
                         </li>
                         <li class="nav-link">
-                            <a href="./pages/tournaments.html">
+                            <a href="/src/html/tournaments.html">
                                 <i class='bx bx-trophy icon'></i>
                                 <span class="text nav-text">Tournaments</span>
                             </a>
                         </li>
                         <li class="nav-link">
-                            <a href="./pages/calendar.html">
+                            <a href="/src/html/calendar.html">
                                 <i class='bx bx-calendar icon'></i>
                                 <span class="text nav-text">Calendar</span>
                             </a>
                         </li>
                         <li class="nav-link">
-                            <a href="./pages/gallery.html">
+                            <a href="/src/html/html pages/">
                                 <i class='bx bx-image icon'></i>
                                 <span class="text nav-text">Gallery</span>
                             </a>
@@ -94,7 +94,7 @@
                         </div>
                     </li>
                     <div id="user-info">
-                    <img src="./images/profile-picture.jpg" id="userImg">
+                    <img src="/images/profile-picture.jpg" id="userImg">
                     <div class="user-details">
                         <div id="userName"></div>
                         <div id="userEmail"></div>
@@ -126,7 +126,7 @@
                     <div id="dragDropContainer" class="drag-and-drop-container">
                         <p id="dragDropText">Choose a file, or drag it here</p>
                         <input type="file" id="eventImageUpload" accept="image/*" style="display: none;">
-                        <img id="uploadImg" src="./images/placeholder-image.png" alt="">
+                        <img id="uploadImg" src="/images/free-download-1767976-1502312.png" alt="">
                         <p id="uploadStatus"></p>
                     </div>
                     <button id="saveEventButton">Create Event</button>
@@ -157,7 +157,7 @@
         <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-storage.js"></script>
-        <script src="./eventCreate.js"></script>
-        <script src="script.js"></script>
+        <script src="/src/js/eventCreate.js"></script>
+        <script src="/src/js/script.js"></script>
     </body>
     </html>

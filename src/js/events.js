@@ -363,23 +363,6 @@ function checkAndSaveUserData(user) {
       });
 }
 
-// Check if the user is signed in on page load
-firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-        // User is signed in, check and save user data
-        checkAndSaveUserData(user);
-    } else {
-        // User is not signed in, initiate sign-in process
-        firebase.auth().signInWithPopup(provider)
-            .then((result) => {
-                const user = result.user;
-                checkAndSaveUserData(user);
-            })
-            .catch((error) => {
-                console.error('Error during sign-in:', error);
-            });
-    }
-});
 
 function formatEventDate(date) {
   const eventDate = new Date(date.seconds * 1000);
@@ -854,6 +837,12 @@ async function displayLeaderboard() {
   podiumContainer.innerHTML = '';
   leaderboardBody.innerHTML = '';
 
+  // Helper function to get the first name
+  const getFirstName = (fullName) => {
+    if (!fullName) return '';
+    return fullName.split(' ')[0];
+  };
+
   // Display top 3 users on the podium
   leaderboardData.slice(0, 3).forEach((user, index) => {
     let podiumClass;
@@ -865,13 +854,14 @@ async function displayLeaderboard() {
 
     // Determine which name to display
     const displayName = user.userName !== 'Anonymous' ? user.userName : user.displayName;
+    const firstName = getFirstName(displayName);
 
     const podiumItem = `
       <div class="podium-item ${podiumClass}">
         <span class="podium-number">${index + 1}</span>
-        <img src="${user.profilePicture}" alt="${displayName}'s profile picture" class="podium-img">
-        <h3>${displayName}</h3>
-        <p>${user.totalLikes} Likes</p>
+        <img src="${user.profilePicture}" alt="${firstName}'s profile picture" class="podium-img">
+        <h3>${firstName}</h3>
+        <p class="likes">${user.totalLikes} Likes</p>
       </div>
     `;
     podiumContainer.insertAdjacentHTML('beforeend', podiumItem);
@@ -881,13 +871,16 @@ async function displayLeaderboard() {
   leaderboardData.slice(3).forEach((user, index) => {
     // Determine which name to display
     const displayName = user.userName !== 'Anonymous' ? user.userName : user.displayName;
+    const firstName = getFirstName(displayName);
 
     const row = `
       <tr>
         <td>${index + 4}</td> <!-- Rank starts from 4 for users after the top 3 -->
         <td>
-          <img src="${user.profilePicture}" alt="${displayName}'s profile picture" class="profile-pic">
-          ${displayName}
+        <div class="profile-container">
+          <img src="${user.profilePicture}" alt="${firstName}'s profile picture" class="profile-pic">
+          ${firstName}
+          </div>
         </td>
         <td>${user.totalLikes}</td>
       </tr>
