@@ -29,12 +29,12 @@ const modeText = sidebar.querySelector(".mode-text");
 // Function to display user info
 function displayUserInfo(user) {
     if (user) {
-        userImg.src = user.photoURL || "/images/default-profile-picture.jpg";
+        userImg.src = user.photoURL || "./";
         userEmail.innerText = user.email || "No email";
         userName.innerText = user.displayName || "No name";
         loginButton.innerHTML = `<a href="#"><i class='bx bx-log-out icon'></i><span class="text nav-text">Logout</span></a>`;
     } else {
-        userImg.src = "/images/profile-picture.jpg";
+        userImg.src = "../../images/profile-picture.jpg";
         userEmail.innerText = "john.doe@example.com";
         userName.innerText = "John Doe";
         loginButton.innerHTML = `<a href="#"><i class='bx bx-log-in icon'></i><span class="text nav-text">Login</span></a>`;
