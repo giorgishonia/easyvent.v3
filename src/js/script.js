@@ -198,5 +198,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Navigate to profile page on user image click
 userImg.addEventListener("click", () => {
-    window.location.href = "/pages/profile.html"; // Replace with your actual profile page URL
+    window.location.href = "./profile.html"; // Replace with your actual profile page URL
 });
