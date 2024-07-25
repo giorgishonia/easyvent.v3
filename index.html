@@ -107,7 +107,7 @@ body {
         <header>
             <div class="image-text">
                 <span class="image">
-                    <img id="img" src="/images/logo.png" alt="easyvent logo">
+                    <img id="img" src="./images/logo.png" alt="easyvent logo">
                 </span>
                 <div class="text logo-text">
                     <span class="name">EasyVent</span>
@@ -231,57 +231,9 @@ body {
         <button id="backButton">Back</button>
         <h1 id="categoryTitle"></h1>
         <div id="eventsContainer" class="category-events"></div>-->
-        <button id="fetchScheduleButton">Get University Schedule</button>
     
-        <form id="loginForm" style="display:none;">
-            <input type="text" id="username" placeholder="Username" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit">Fetch Schedule</button>
-        </form>
-    
-        <div id="scheduleContainer"></div>
-    
-    </section>
 </body>
-<script>
-    document.getElementById('fetchScheduleButton').addEventListener('click', () => {
-    document.getElementById('loginForm').style.display = 'block';
-});
 
-document.getElementById('loginForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    
-    const response = await fetch('http://localhost:3000/scrape-schedule', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-    });
-    
-    const scheduleData = await response.json();
-    displaySchedule(scheduleData);
-});
-
-function displaySchedule(scheduleData) {
-    const scheduleContainer = document.getElementById('scheduleContainer');
-    scheduleContainer.innerHTML = '';
-    
-    scheduleData.forEach(item => {
-        const scheduleItem = document.createElement('div');
-        scheduleItem.innerHTML = `
-            <p>Date: ${item.date}</p>
-            <p>Time: ${item.time}</p>
-            <p>Course: ${item.course}</p>
-            <p>Room: ${item.room}</p>
-        `;
-        scheduleContainer.appendChild(scheduleItem);
-    });
-}
-</script>
 <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
 
 <!-- Add Firebase products that you want to use -->
