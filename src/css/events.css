@@ -94,7 +94,6 @@
     margin-top: 30px;
     gap: 10px;
     justify-content: start;
-    width: 49%;
 }
 
 body.dark .sidebar{
@@ -115,6 +114,8 @@ body.dark .sidebar{
 
 .event-card p {
     text-align: center;
+    border: 1px solid black;
+  color: black; 
     font-weight: 100;
     font-family: 'Poppins', sans-serif;
 }
@@ -520,7 +521,7 @@ body.dark .event-card:hover {
   border-radius: 15px;
   cursor: pointer;
   height: fit-content;
-  background: linear-gradient(180deg, rgb(105, 92, 254) 0%, rgb(52, 40, 184) 100%);
+  background-color: black;
   color: white;
 
 }
@@ -545,7 +546,7 @@ body.dark .category-button {
 }
 
 .category-text{
-  background-color: rgb(105, 92, 254);
+  background-color: black;
   color: white;
   border-radius: 10px;
   padding: 5px;
@@ -616,7 +617,7 @@ body.dark .category-text{
 .carousel-content {
   -ms-overflow-style: none; /* Hide the scrollbar in IE and Edge */
   scrollbar-width: thin; /* Make the scrollbar thin in Firefox */
-  scrollbar-color: #695cfe transparent;
+  scrollbar-color: #1b1b1b transparent;
 }
 
 body.dark .carousel-content {
@@ -696,7 +697,8 @@ body.dark hr {
 }
 
 .comment-button{
-  display: none;
+  background-color: transparent;
+  border: none;
 }
 
 #vote-container{
@@ -761,20 +763,12 @@ body.dark .tooltip {
 }
 
 
-
-
-
-
-
-
-
-
-
 /* General styles */
 #leaderboard {
   font-family: Arial, sans-serif;
   text-align: center;
   margin: 20px;
+  width: 300px;
 }
 
 #leaderboard h2 {
@@ -807,8 +801,8 @@ body.dark .tooltip {
 }
 
 .podium-item img {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   border: 3px solid #fff;
 }
@@ -824,7 +818,7 @@ body.dark .tooltip {
 }
 
 #category-carousel{
-  width: 50%;
+  width: 62.5%;
 }
 
 .podium-item p {
@@ -943,7 +937,8 @@ table img {
 
 .wrapper{
   display: flex;
-  gap: 40px;
+  gap: 100px;
+  justify-content: space-between;
 }
 
 .podium-item.gold img{
@@ -956,3 +951,173 @@ table img {
   border: 3px solid #CD7F32;
 }
 
+/* Filter Container Overlay */
+.filter-container {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000; /* High z-index to overlay on top of everything */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.8); /* Black with opacity */
+}
+
+.filter-content {
+  background-color: #fefefe;
+  margin: 5% auto; /* 5% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+  max-width: 600px;
+}
+
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Light mode styling */
+.category-music {
+  background-color: #ffeb3b; /* Light yellow for Music */
+}
+
+.category-sports {
+  background-color: #c8e6c9; /* Light green for Sports */
+}
+
+.category-technology {
+  background-color: #bbdefb; /* Light blue for Technology */
+}
+
+.category-art {
+  background-color: #f48fb1; /* Light pink for Art */
+}
+
+.category-education {
+  background-color: #c5e1a5; /* Light green for Education */
+}
+
+.category-fun {
+  background-color: #f06292; /* Light pink for Fun */
+}
+
+.category-gaming {
+  background-color: #64b5f6; /* Light blue for Gaming */
+}
+
+.category-food {
+  background-color: #ffcc80; /* Light orange for Food */
+}
+
+.category-movies {
+  background-color: #ffab91; /* Light peach for Movies */
+}
+
+.category-theater {
+  background-color: #dce775; /* Light yellow-green for Theater */
+}
+
+.category-fashion {
+  background-color: #e1bee7; /* Light purple for Fashion */
+}
+
+.category-health {
+  background-color: #81c784; /* Light green for Health */
+}
+
+.category-for-kids {
+  background-color: #ff8a80; /* Light red for For Kids */
+}
+
+.category-for-pets {
+  background-color: #b2dfdb; /* Light teal for For Pets */
+}
+
+.category-charity {
+  background-color: #d4e157; /* Light green for Charity */
+}
+
+.category-travel {
+  background-color: #b2dfdb; /* Light teal for Travel */
+}
+
+/* Dark mode styling */
+body.dark .category-music {
+  background-color: #c0ca33; /* Darker yellow for Music */
+}
+
+body.dark .category-sports {
+  background-color: #a5d6a7; /* Darker green for Sports */
+}
+
+body.dark .category-technology {
+  background-color: #90caf9; /* Darker blue for Technology */
+}
+
+body.dark .category-art {
+  background-color: #f06292; /* Darker pink for Art */
+}
+
+body.dark .category-education {
+  background-color: #aed581; /* Darker green for Education */
+}
+
+body.dark .category-fun {
+  background-color: #ec407a; /* Darker pink for Fun */
+}
+
+body.dark .category-gaming {
+  background-color: #42a5f5; /* Darker blue for Gaming */
+}
+
+body.dark .category-food {
+  background-color: #ffb74d; /* Darker orange for Food */
+}
+
+body.dark .category-movies {
+  background-color: #ff8a65; /* Darker peach for Movies */
+}
+
+body.dark .category-theater {
+  background-color: #c0ca33; /* Darker yellow-green for Theater */
+}
+
+body.dark .category-fashion {
+  background-color: #ce93d8; /* Darker purple for Fashion */
+}
+
+body.dark .category-health {
+  background-color: #66bb6a; /* Darker green for Health */
+}
+
+body.dark .category-for-kids {
+  background-color: #ff5252; /* Darker red for For Kids */
+}
+
+body.dark .category-for-pets {
+  background-color: #80cbc4; /* Darker teal for For Pets */
+}
+
+body.dark .category-charity {
+  background-color: #c0ca33; /* Darker green for Charity */
+}
+
+body.dark .category-travel {
+  background-color: #80cbc4; /* Darker teal for Travel */
+}
+
+
+body.dark .event-card p{
+  border: 1px solid white;
+}

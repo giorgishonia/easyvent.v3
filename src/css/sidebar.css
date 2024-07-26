@@ -31,7 +31,7 @@ body{
 }
 body.dark{
     --body-color: #0e1113;;
-    --sidebar-color: #242526;
+    --sidebar-color: #0e1113;
     --primary-color: #3a3b3c;
     --primary-color-light: #3a3b3c;
     --toggle-color: #fff;
@@ -45,13 +45,13 @@ body.dark{
     top: 0;
     left: 0;
     height: 100%;
-    width: 220px;
+    width: 240px;
     padding: 10px 14px;
     background: var(--sidebar-color);
     transition: var(--tran-05);
     padding-bottom: 0;
     z-index: 100;  
-    box-shadow: 5px 0px 15px #00000038;
+    box-shadow: 5px 0px 15px #0000001a;
 }
 .sidebar.close{
     width: 88px;
@@ -85,7 +85,7 @@ body.dark{
 }
 .sidebar .text {
     font-size: 14px;
-    font-weight: 100;
+    font-weight: 500;
     white-space: nowrap;
     opacity: 1;
   }
@@ -130,8 +130,8 @@ header .image-text .profession{
     transform: translateY(-50%) rotate(180deg);
     height: 25px;
     width: 25px;
-    background-color: var(--primary-color);
-    color: var(--sidebar-color);
+    background-color: black;
+    color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -141,7 +141,13 @@ header .image-text .profession{
     transition: var(--tran-05);
 }
 body.dark .sidebar header .toggle{
-    color: var(--text-color);
+    color: black;
+    background-color: white;
+    
+}
+
+body.dark .logo-text{
+    color: white;
 }
 
 body.light .sidebar #img{
@@ -156,7 +162,7 @@ body.light .sidebar #img{
 }
 .sidebar li.search-box{
     border-radius: 6px;
-    background-color: var(--primary-color-light);
+    background-color: #E2E2E2;    
     cursor: pointer;
     transition: var(--tran-05);
 }
@@ -165,13 +171,33 @@ body.light .sidebar #img{
     width: 100%;
     outline: none;
     border: none;
-    background-color: var(--primary-color-light);
-    color: var(--text-color);
+    background-color: #E2E2E2;  
+    color: black;
     border-radius: 6px;
     font-size: 15px;
-    font-weight: 100;
+    font-weight: 500;
     transition: var(--tran-05);
 }
+
+body.dark .sidebar li.search-box input{
+    background-color: #181818;
+    border: none;
+    color: white;
+}
+
+body.dark .sidebar li.search-box{
+    background-color: #181818;
+}
+
+body.dark input::placeholder{
+    color: white;
+}
+
+body.dark input{
+    caret-color: white;
+}
+
+
 .sidebar li a{
     list-style: none;
     height: 100%;
@@ -185,8 +211,23 @@ body.light .sidebar #img{
     transition: var(--tran-03);
 }
 .sidebar li a:hover{
-    background-color: var(--primary-color);
+    background-color: black;
 }
+
+body.dark .sidebar li a:hover{
+    background-color: rgb(68, 68, 68);
+}
+
+input::placeholder{
+
+    color: black;
+    font-weight: 500;
+}
+
+body.dark input::placeholder{
+    columns: white;
+}
+
 .sidebar li a:hover .icon,
 .sidebar li a:hover .text{
     color: var(--sidebar-color);
@@ -269,9 +310,9 @@ body.dark .switch::before{
     position: absolute;
     top: 0;
     top: 0;
-    left: 220px;
+    left: 240px;
     height: 100vh;
-    width: calc(100% - 220px);
+    width: calc(100% - 240px);
     background-color: var(--body-color);
     transition: var(--tran-05);
     padding: 40px;

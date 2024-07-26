@@ -156,26 +156,34 @@
         <div class="text">Events</div>
         <button style="display: none;" id="createEventButton">Create Event</button>
         
-        <div id="category-carousel" class="carousel-container">
-            <div id="category-buttons" class="carousel-content">
-                <button id="music-button" class="category-button" data-category="Music">🎵 Music</button>
-                <button id="sports-button" class="category-button" data-category="Sports">⚽ Sports</button>
-                <button id="technology-button" class="category-button" data-category="Technology">💻 Technology</button>
-                <button id="art-button" class="category-button" data-category="Art">🎨 Art</button>
-                <button id="education-button" class="category-button" data-category="Education">📚 Education</button>
-                <button id="fun-button" class="category-button" data-category="Fun">🥳 Fun</button>
-                <button id="gaming-button" class="category-button" data-category="Gaming">🎮 Gaming</button>
-                <button id="food-button" class="category-button" data-category="Food">🍽️ Food</button>
-                <button id="movies-button" class="category-button" data-category="Movies">🎬 Movies</button>
-                <button id="theater-button" class="category-button" data-category="Theater">🎭 Theater</button>
-                <button id="fashion-button" class="category-button" data-category="Fashion">👗 Fashion</button>
-                <button id="health-button" class="category-button" data-category="Health">💪 Health</button>
-                <button id="kids-button" class="category-button" data-category="For Kids">🧒 For Kids</button>
-                <button id="pets-button" class="category-button" data-category="For Pets">🐾 For Pets</button>
-                <button id="charity-button" class="category-button" data-category="Charity">🤲 Charity</button>
-                <button id="travel-button" class="category-button" data-category="Travel">✈️ Travel</button>
+        <button id="filterButton">Filter</button>
+
+        <div id="filterContainer" class="filter-container">
+          <div class="filter-content">
+            <button id="closeFilterButton" class="close-button">&times;</button>
+            <h2>Filter Options</h2>
+            <div id="category-buttons">
+              <button class="category-button" data-category="Music" style="background-color: #ffdfdf;">🎵 Music</button>
+              <button class="category-button" data-category="Sports" style="background-color: #d4f1f4;">⚽ Sports</button>
+              <button class="category-button" data-category="Technology" style="background-color: #d1c4e9;">💻 Technology</button>
+              <button class="category-button" data-category="Art" style="background-color: #ffecb3;">🎨 Art</button>
+              <button class="category-button" data-category="Education" style="background-color: #c8e6c9;">📚 Education</button>
+              <button class="category-button" data-category="Fun" style="background-color: #ffab91;">🥳 Fun</button>
+              <button class="category-button" data-category="Gaming" style="background-color: #b3e5fc;">🎮 Gaming</button>
+              <button class="category-button" data-category="Food" style="background-color: #ffe082;">🍽️ Food</button>
+              <button class="category-button" data-category="Movies" style="background-color: #f48fb1;">🎬 Movies</button>
+              <button class="category-button" data-category="Theater" style="background-color: #e1bee7;">🎭 Theater</button>
+              <button class="category-button" data-category="Fashion" style="background-color: #ffccbc;">👗 Fashion</button>
+              <button class="category-button" data-category="Health" style="background-color: #c5e1a5;">💪 Health</button>
+              <button class="category-button" data-category="For Kids" style="background-color: #b2ebf2;">🧒 For Kids</button>
+              <button class="category-button" data-category="For Pets" style="background-color: #dcedc8;">🐾 For Pets</button>
+              <button class="category-button" data-category="Charity" style="background-color: #ffcc80;">🤲 Charity</button>
+              <button class="category-button" data-category="Travel" style="background-color: #b2dfdb;">✈️ Travel</button>
             </div>
+            <!-- Add more filter options as needed -->
+          </div>
         </div>
+        
         
 
         <div class="wrapper">

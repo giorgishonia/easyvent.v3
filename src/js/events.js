@@ -171,13 +171,16 @@ function displayEvents(uid) {
             <p id="event-location">${event.location}</p>
             <div id="like-container-${eventId}">
               <button class="like-button" data-id="${eventId}">
-                <svg id="like-icon-${eventId}" class="like-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                <svg id="like-icon-${eventId}" class="like-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
                 </svg>
                 <span class="like-count">${event.likeCount || 0}</span>
               </button>
             </div>
-            <button class="comment-button" data-id="${eventId}">Comment</button>
+            <button class="comment-button" data-id="${eventId}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
+  <path d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+</svg></button>
           </div>
         </div>
         <div class="dropdown">
@@ -892,3 +895,23 @@ async function displayLeaderboard() {
 // Call displayLeaderboard to show the data on page load
 document.addEventListener('DOMContentLoaded', displayLeaderboard);
 
+document.addEventListener('DOMContentLoaded', () => {
+  const filterButton = document.getElementById('filterButton');
+  const filterContainer = document.getElementById('filterContainer');
+  const closeFilterButton = document.getElementById('closeFilterButton');
+
+  filterButton.addEventListener('click', () => {
+    filterContainer.style.display = 'block';
+  });
+
+  closeFilterButton.addEventListener('click', () => {
+    filterContainer.style.display = 'none';
+  });
+
+  // Close the filter container when clicking outside of the filter content
+  window.addEventListener('click', (event) => {
+    if (event.target == filterContainer) {
+      filterContainer.style.display = 'none';
+    }
+  });
+});
